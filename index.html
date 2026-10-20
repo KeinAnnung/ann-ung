@@ -197,16 +197,16 @@ $('#fontUp').addEventListener('click',()=>{
  talk(readerLevel===2?'¡Magnífico! Ahora puedes leer el acta completa, que por política institucional no contiene información nueva.':'¡Eso es! A veces el ajuste más útil está a la vista. No se lo digas al departamento de diseño.','ACCESIBILIDAD · AJUSTE DE LECTURA');
 });
 $('#fontDown').addEventListener('click',()=>{readerLevel=Math.max(0,readerLevel-1);renderReaderLevel();});
-$('#fontReset').addEventListener('click',()=>{readerLevel=0;renderReaderLevel();toast('Texto restablecido. La organización no restablece responsabilidades.');});
+$('#fontReset').addEventListener('click',()=>{readerLevel=0;renderReaderLevel();toast(localized('resetToast'));});
 $('#readHint').addEventListener('click',()=>{
  const hint=$('#readHintText');hint.hidden=false;hint.className='mission-feedback hint show';
- hint.textContent='Pista oficial (no era tan secreta): busca los botones A− y A+ en la barra «AJUSTES DE LECTURA», justo encima del contenido. En muchos móviles también puedes separar dos dedos sobre el contenido para ampliarlo. No necesitas hacerlo perfecto; prueba hasta encontrar algo cómodo.';
+ hint.textContent=localized('hintText');
  talk('¡Una pista! Mira justo por encima del contenido. Hay unos botones A− y A+. Están ahí para usarse. No es una trampa. Bueno, no una trampa de lectura.','PISTA NO SOLICITADA, PERO ÚTIL');
 });
 $('#readDone').addEventListener('click',()=>{
  const feedback=$('#readFeedback');feedback.classList.add('show');
- if(readerLevel>0){feedback.className='mission-feedback success show';feedback.textContent='¡Misión completada! Has ampliado el texto y mejorado la legibilidad. En una web real también puedes usar el zoom del navegador o las opciones de accesibilidad de tu dispositivo. El Sr. Monigote quiere atribuirse el mérito.';talk('¡Lo conseguiste! Has hecho que la pantalla se adapte un poco más a ti. Así es como debería funcionar la tecnología, aunque nuestra organización todavía está deliberando.','MISIÓN 01 · COMPLETADA');}
- else{feedback.className='mission-feedback hint show';feedback.textContent='Todavía no has cambiado el tamaño desde los controles de esta página. Prueba A+ arriba o solicita una pista. No hay penalización por preguntar: el anfitrión tampoco sabe dónde puso sus llaves.';talk('¡No pasa nada! Busca los botones A+ que dicen «Ajustes de lectura», arriba. También puedes pedirme una pista. Equivocarse es parte de aprender; insistir con dignidad es parte del entretenimiento.','MISIÓN 01 · PISTA');}
+ if(readerLevel>0){feedback.className='mission-feedback success show';feedback.textContent=localized('readSuccess');talk('¡Lo conseguiste! Has hecho que la pantalla se adapte un poco más a ti. Así es como debería funcionar la tecnología, aunque nuestra organización todavía está deliberando.','MISIÓN 01 · COMPLETADA');}
+ else{feedback.className='mission-feedback hint show';feedback.textContent=localized('readNotYet');talk('¡No pasa nada! Busca los botones A+ que dicen «Ajustes de lectura», arriba. También puedes pedirme una pista. Equivocarse es parte de aprender; insistir con dignidad es parte del entretenimiento.','MISIÓN 01 · PISTA');}
 });
 $('#readReset').addEventListener('click',()=>{
  readerLevel=0;renderReaderLevel();$('#readFeedback').className='mission-feedback';$('#readFeedback').textContent='';$('#readHintText').hidden=true;$('#readHintText').className='mission-feedback hint';
@@ -221,7 +221,7 @@ $('#deviceHint').innerHTML=touchDevice
 let currentLang='es', babelCounter=0;
 const L={
 es:{
-langLabel:'IDIOMA',navAbout:'NOSOTROS',navTeam:'EQUIPO',navMission:'MISIÓN',navArchive:'ARCHIVO',navLearn:'APRENDER',navFAQ:'FAQ',navG:'¿LA G?',
+langLabel:'IDIOMA',langGroupTitle:'Idioma de interacción',navAbout:'NOSOTROS',navTeam:'EQUIPO',navMission:'MISIÓN',navArchive:'ARCHIVO',navLearn:'APRENDER',navFAQ:'FAQ',navG:'¿LA G?',
 readerTitle:'AJUSTES DE LECTURA',fontReset:'Restablecer',heroKicker:'● PROTOCOLO DE BIENVENIDA · VERSIÓN DEFINITIVA (11.ª)',
 heroWelcome:'Te explicaremos qué somos y qué significa cada componente de <em>ANN-UNG</em>. De manera clara, ordenada y sin rodeos.',
 heroFineprint:'La organización garantiza una explicación completa. La definición de «completa» queda a criterio de la organización.',
@@ -241,7 +241,7 @@ uExplain:'U es Universal. Una definición amplia, ambiciosa y difícil de audita
 nExplain:'N es Non… La continuación existe en algún formato. No podemos confirmar cuál, aunque el formato es universal.'
 },
 en:{
-langLabel:'LANGUAGE',navAbout:'ABOUT',navTeam:'TEAM',navMission:'MISSION',navArchive:'ARCHIVE',navLearn:'LEARN',navFAQ:'FAQ',navG:'THE G?',
+langLabel:'LANGUAGE',langGroupTitle:'Interaction language',navAbout:'ABOUT',navTeam:'TEAM',navMission:'MISSION',navArchive:'ARCHIVE',navLearn:'LEARN',navFAQ:'FAQ',navG:'THE G?',
 readerTitle:'READING SETTINGS',fontReset:'Reset',heroKicker:'● WELCOME PROTOCOL · DEFINITIVE VERSION (11TH)',
 heroWelcome:'We will explain who we are and what every component of <em>ANN-UNG</em> means. Clearly, neatly, and without detours.',
 heroFineprint:'The organization guarantees a complete explanation. The definition of “complete” is determined by the organization.',
@@ -261,7 +261,7 @@ uExplain:'U stands for Universal. A broad, ambitious and difficult-to-audit defi
 nExplain:'N stands for Non… The continuation exists in some format. We cannot confirm which one, though the format is universal.'
 },
 de:{
-langLabel:'SPRACHE',navAbout:'ÜBER UNS',navTeam:'TEAM',navMission:'MISSION',navArchive:'ARCHIV',navLearn:'LERNEN',navFAQ:'FAQ',navG:'DAS G?',
+langLabel:'SPRACHE',langGroupTitle:'Sprache der Interaktion',navAbout:'ÜBER UNS',navTeam:'TEAM',navMission:'MISSION',navArchive:'ARCHIV',navLearn:'LERNEN',navFAQ:'FAQ',navG:'DAS G?',
 readerTitle:'LESEEINSTELLUNGEN',fontReset:'Zurücksetzen',heroKicker:'● WILLKOMMENSPROTOKOLL · ENDGÜLTIGE VERSION (11.)',
 heroWelcome:'Wir erklären, wer wir sind und was jeder Bestandteil von <em>ANN-UNG</em> bedeutet. Klar, ordentlich und ohne Umwege.',
 heroFineprint:'Die Organisation garantiert eine vollständige Erklärung. Was „vollständig“ bedeutet, bestimmt die Organisation.',
@@ -285,13 +285,13 @@ es:{'EXPLICACIÓN INICIAL':'DECLARACIÓN DEL PORTAVOZ','ANN: IDENTIDAD':'ANN: ID
 en:{'EXPLICACIÓN INICIAL':'WELCOME STATEMENT','ANN: IDENTIDAD':'ANN: IDENTITY','U: UNIVERSAL':'U: UNIVERSAL','N: NON…':'N: NON…','G: EN PREPARACIÓN':'G: IN PREPARATION','BUCLE DE CALIDAD':'QUALITY LOOP','CIERRE PROVISIONAL':'PROVISIONAL CLOSURE','ACLARACIÓN DEL PORTAVOZ':'SPOKESMONSTER CLARIFICATION','VISITA GUIADA ACTIVADA':'GUIDED TOUR ACTIVATED','ACCESIBILIDAD · AJUSTE DE LECTURA':'ACCESSIBILITY · READING SETTINGS','MISIÓN 01 · COMPLETADA':'MISSION 01 · COMPLETE','MISIÓN 01 · PISTA':'MISSION 01 · HINT'},
 de:{'EXPLICACIÓN INICIAL':'BEGRÜSSUNG','ANN: IDENTIDAD':'ANN: IDENTITÄT','U: UNIVERSAL':'U: UNIVERSAL','N: NON…':'N: NON…','G: EN PREPARACIÓN':'G: IN VORBEREITUNG','BUCLE DE CALIDAD':'QUALITÄTSSCHLEIFE','CIERRE PROVISIONAL':'VORLÄUFIGER ABSCHLUSS','ACLARACIÓN DEL PORTAVOZ':'KLARSTELLUNG DES SPRECHERS','VISITA GUIADA ACTIVADA':'GEFÜHRTER RUNDGANG AKTIV','ACCESIBILIDAD · AJUSTE DE LECTURA':'BARRIEREFREIHEIT · LESEEINSTELLUNGEN','MISIÓN 01 · COMPLETADA':'MISSION 01 · ABGESCHLOSSEN','MISIÓN 01 · PISTA':'MISSION 01 · HINWEIS'}};
 const babelLines=[
-['BABEL / GESTIÓN DEL CAOS','¡Bienvenido! Your visit comienza ahora. Bitte ignore la traducción anterior; sie war korrekt.'],
-['BABEL / TRADUCCIÓN INDEPENDIENTE','You found the button! Sehr gut. Ahora vuelve al inicio, bitte, por razones administrativas.'],
-['BABEL / AVISO OFICIAL','Achtung: no comparta su contraseña. The password bleibt secret. C’est non-negotiable.'],
-['BABEL / ERROR NO PREVISTO','La G está presque aquí. Unfortunately, wurde sie verschoben hasta próximo aviso.'],
-['BABEL / RECUPERACIÓN','¡Lo conseguiste! The task ist erledigt, aunque nadie sabe qué idioma lo certificó.'],
-['BABEL / AYUDA CIRCULAR','¿Necesita help? Natürlich. Bienvenue al centro de ayuda, qui ne répond pas à cette question.'],
-['BABEL / CIERRE','Merci por su paciencia. La organización ha perdido el idioma, pero conserva su arrogancia.']
+['BABEL / GESTIÓN DEL CAOS','<span lang="es">¡Bienvenido!</span> <span lang="en">Your visit</span> <span lang="es">comienza ahora.</span> <span lang="de">Bitte ignore</span> <span lang="es">la traducción anterior;</span> <span lang="de">sie war korrekt.</span>'],
+['BABEL / TRADUCCIÓN INDEPENDIENTE','<span lang="en">You found the button!</span> <span lang="de">Sehr gut.</span> <span lang="es">Ahora vuelve al inicio,</span> <span lang="de">bitte</span>, <span lang="es">por razones administrativas.</span>'],
+['BABEL / AVISO OFICIAL','<span lang="de">Achtung:</span> <span lang="es">no comparta su contraseña.</span> <span lang="en">The password</span> <span lang="de">bleibt geheim.</span> <span lang="fr">C’est non-negotiable.</span>'],
+['BABEL / ERROR NO PREVISTO','<span lang="es">La G está</span> <span lang="fr">presque</span> <span lang="es">aquí.</span> <span lang="en">Unfortunately,</span> <span lang="de">wurde sie verschoben</span> <span lang="es">hasta próximo aviso.</span>'],
+['BABEL / RECUPERACIÓN','<span lang="es">¡Lo conseguiste!</span> <span lang="en">The task</span> <span lang="de">ist erledigt,</span> <span lang="es">aunque nadie sabe qué idioma lo certificó.</span>'],
+['BABEL / AYUDA CIRCULAR','<span lang="es">¿Necesita</span> <span lang="en">help?</span> <span lang="de">Natürlich.</span> <span lang="fr">Bienvenue</span> <span lang="es">al centro de ayuda,</span> <span lang="fr">qui ne répond pas à cette question.</span>'],
+['BABEL / CIERRE','<span lang="fr">Merci</span> <span lang="es">por su paciencia.</span> <span lang="de">Die Organisation</span> <span lang="es">ha perdido el idioma, pero conserva su arrogancia.</span>']
 ];
 function localized(key){const selected=currentLang==='babel'?'es':currentLang;return (L[selected]&&L[selected][key])||L.es[key]||key;}
 function dialogue(key){return (L[currentLang==='babel'?'es':currentLang][key])||L.es[key]||key;}
@@ -303,7 +303,7 @@ function applyLanguage(lang){
  $$('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));
  $$('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;const text=(L[base]&&L[base][key]);if(text!==undefined)el.textContent=text;});
  $$('[data-i18n-html]').forEach(el=>{const key=el.dataset.i18nHtml;const text=(L[base]&&L[base][key]);if(text!==undefined)el.innerHTML=text;});
- $('#langLabel').textContent=localized('langLabel');
+ $('#langLabel').textContent=localized('langLabel');$('.lang-switch').setAttribute('aria-label',localized('langGroupTitle'));
  const labelsA={es:['Aumentar el tamaño del texto','Reducir el tamaño del texto','Restablecer el tamaño de lectura'],en:['Increase text size','Decrease text size','Reset reading size'],de:['Text vergrößern','Text verkleinern','Leseschrift zurücksetzen']}[base];
  $('#fontUp').setAttribute('aria-label',labelsA[0]);$('#fontUp').title=labelsA[0];
  $('#fontDown').setAttribute('aria-label',labelsA[1]);$('#fontDown').title=labelsA[1];
@@ -313,7 +313,7 @@ function applyLanguage(lang){
  $('#speechLabel').textContent=labels[base][$('#speechLabel').textContent]||({'es':'DECLARACIÓN DEL PORTAVOZ','en':'SPOKESMONSTER STATEMENT','de':'ERKLÄRUNG DES SPRECHERS'}[base]);
  babelCounter=0;
  talk(hostLinesByLanguage[base][0][1],hostLinesByLanguage[base][0][0]);
- if(lang==='babel')talk(babelLines[0][1],babelLines[0][0]);
+ 
 }
 $$('[data-lang]').forEach(b=>b.addEventListener('click',()=>{applyLanguage(b.dataset.lang);toast(b.dataset.lang==='babel'?'¡Modo BABEL activado! The language hat is now missing.':'Idioma: '+({es:'español',en:'English',de:'Deutsch'}[b.dataset.lang]));}));
 function babelMessage(){
@@ -324,7 +324,10 @@ const baseTalk= talk;
 talk = function(text,label){
  if(currentLang==='babel'){
   const item=babelMessage();
-  return baseTalk(item[1],item[0]);
+  const plain=item[1].replace(/<[^>]+>/g,'');
+  baseTalk(plain,item[0]);
+  $('#speech').innerHTML=item[1]; // Frases predefinidas y seguras; cada idioma se marca para lectores de pantalla.
+  return;
  }
  const lang=currentLang;
  // Localize recurring interaction copy while retaining one-off jokes in Spanish as an occasional translation glitch.
