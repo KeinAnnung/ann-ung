@@ -153,7 +153,7 @@ section[id]{scroll-margin-top:148px}
   <path d="M112 190 L119 199 L132 205 Q149 211 155 201 Q159 191 142 184Z" fill="#6551B8" stroke="#211832" stroke-width="4" stroke-linejoin="round"/>
   <path d="M96 159 L109 168 L122 158 L118 174 L109 180 L100 174Z" fill="#72F3DF" stroke="#211832" stroke-width="3" stroke-linejoin="round"/>
   <path d="M104 164 L109 168 L114 164 L113 173 L109 176 L105 173Z" fill="#3776C8"/>
-</svg><div class="speech-label" id="speechLabel">DECLARACIÓN DEL PORTAVOZ</div><div class="speech" id="speech" aria-live="polite">¡Bienvenido! Soy el Sr. Monigote. Te explicaré quiénes somos y qué significa cada componente de ANN-UNG. Empezaremos por el principio. Por rigor, definiremos primero qué entendemos por principio.</div><div class="hostbuttons"><button class="btn primary" id="talkBtn" data-i18n="continueBtn">Continuar explicación</button><button class="btn" id="helpBtn" data-i18n="helpBtn">Necesito ayuda</button></div></div></div></section>
+</svg><div class="speech-label" id="speechLabel">DECLARACIÓN DEL PORTAVOZ</div><div class="speech" id="speech" aria-live="polite">Hola, soy tu anfitrión. Sí, sí… justo yo. No te preocupes, no muerdo. (Al menos, no todavía.)</div><div class="hostbuttons"><button class="btn primary" id="talkBtn" data-i18n="continueBtn">Continuar explicación</button><button class="btn" id="helpBtn" data-i18n="helpBtn">Necesito ayuda</button></div></div></div></section>
 
 <section class="section" id="pasillo">
  <div class="section-head"><div><div class="kicker">RECEPCIÓN → PASILLO · USTED ESTÁ AQUÍ (PROBABLEMENTE)</div><h2>Un pasillo. Varias puertas. Cero garantías.</h2></div><p>El mapa está orientado al norte institucional, que cambia cada vez que alguien hace una pregunta.</p></div>
@@ -306,7 +306,7 @@ function showModal(kicker,title,body,stamp){$('#modalKicker').textContent=kicker
 function closeModal(){$('#modal').classList.remove('open');}
 $('#talkBtn').addEventListener('click',nextLine);
 $('#helpBtn').addEventListener('click',()=>talk('Naturalmente. ¿Necesita ayuda para encontrar la sección donde explicamos por qué no podemos ayudarle? Está justo después de la sección que explica por qué esa sección no existe.','CENTRO DE AYUDA CIRCULAR'));
-$('#startBtn').addEventListener('click',()=>{talk('¡Excelente decisión! Le explicaré cada componente en orden alfabético, conceptual y emocional. Empezaremos por ANN. ANN parece un nombre propio. ¿No le parece importante que hayamos empezado?','VISITA GUIADA ACTIVADA');$('#nosotros').scrollIntoView({behavior:'smooth'});toast('Visita iniciada. La salida no forma parte del recorrido.');});
+$('#startBtn').addEventListener('click',()=>{talk('¡¿CÓMO HAS ENTRADO SI TE DIJE QUE NO LO ABRIERAS?! ¡Lo hago por tu bien! En fin… ya que lo hiciste, te explicaré qué somos y qué significa cada componente. Por el principio.','¡¿CÓMO?!');navigateRoom('pasillo');toast('Visita iniciada. La salida no forma parte del recorrido.');});
 $('#leaveBtn').addEventListener('click',()=>showModal('SALIDA VOLUNTARIA','Su salida ha sido aceptada en principio. Para materializarla, complete un formulario sobre su deseo de salir.','FORMULARIO 0-B: ¿Está seguro de que quiere estar seguro?','VOLVER A LA VISITA'));
 $$('[data-say-id]').forEach(b=>b.addEventListener('click',()=>talk(dialogue(b.dataset.sayId),'ACLARACIÓN DEL PORTAVOZ')));
 $$('[data-loop]').forEach(b=>b.addEventListener('click',loopBack));
@@ -320,6 +320,79 @@ $('#finalBtn').addEventListener('click',()=>{loopBack();lineIndex=0;});
 $$('.faq summary').forEach(el=>el.addEventListener('click',()=>{if(el.textContent.includes('G'))talk('¡Por supuesto! La G se explicará a continuación. Para comprender «a continuación», regresemos al inicio. La organización agradece su flexibilidad temporal.','PREGUNTA FRECUENTE CON CONSECUENCIAS');}));
 $$('.nav a').forEach(a=>{if(a.hash==='#g')a.addEventListener('click',()=>talk('La G está al final del recorrido. El recorrido está al final de la G. Hemos decidido no alterar el orden de los acontecimientos.','NAVEGACIÓN AUTORIZADA CON RESERVAS'));});
 document.addEventListener('pointermove',e=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const svg=$('#mascot');if(!svg)return;const r=svg.getBoundingClientRect(),x=(e.clientX-(r.left+r.width/2))/(r.width/2),y=(e.clientY-(r.top+r.height/2))/(r.height/2),face=svg.querySelector('[data-face="'+svg.dataset.expression+'"]');if(!face)return;face.querySelectorAll('.pupil').forEach(p=>p.setAttribute('transform','translate('+Math.max(-2,Math.min(2,x*2.4))+' '+Math.max(-2,Math.min(2,y*2.4))+')'));});
+
+
+/* Laberinto de una página: las salas son rutas, no páginas nuevas. */
+const ROOM_TARGETS={recepcion:'inicio',pasillo:'pasillo',nosotros:'nosotros',equipo:'equipo','ventanilla-3':'ventanilla-3',archivo:'archivo',aprender:'aprender',faq:'preguntas','sala-g':'g',sotano:'sotano',carnet:'passport'};
+function navigateRoom(room){
+ const target=ROOM_TARGETS[room]?room:'pasillo';
+ try{progress.lastRoom=target;saveProgress();}catch(e){}
+ const desired='#/'+target;
+ if(location.hash!==desired)location.hash=desired;else scrollToRoom(target);
+}
+function scrollToRoom(room){
+ const id=ROOM_TARGETS[room]||'pasillo';
+ const node=document.getElementById(id);
+ if(node)node.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+ const roomText={recepcion:'Recepción',pasillo:'Pasillo de puertas',nosotros:'Quiénes somos',equipo:'Nuestro equipo','ventanilla-3':'Ventanilla 3',archivo:'Archivo',aprender:'Laboratorio de habilidades',faq:'Preguntas frecuentes','sala-g':'Sala de la G',sotano:'Sótano',carnet:'Carnet del visitante'};
+ const here=$('#roomNow');if(here)here.textContent=roomText[room]||'Ubicación no registrada';
+ try{progress.lastRoom=room;saveProgress();}catch(e){}
+}
+function syncRoomRoute(){
+ if(!location.hash.startsWith('#/'))return;
+ const route=decodeURIComponent(location.hash.slice(2).split('?')[0]);
+ scrollToRoom(ROOM_TARGETS[route]?route:'pasillo');
+}
+window.addEventListener('hashchange',syncRoomRoute);
+$('[data-room-route]').forEach(el=>el.addEventListener('click',e=>{
+ e.preventDefault();navigateRoom(el.dataset.roomRoute);
+}));
+$('.nav a').forEach(a=>{
+ const routes={'#nosotros':'nosotros','#equipo':'equipo','#proposito':'pasillo','#archivo':'archivo','#aprender':'aprender','#preguntas':'faq','#g':'sala-g'};
+ if(routes[a.getAttribute('href')]){a.dataset.roomRoute=routes[a.getAttribute('href')];a.setAttribute('href','#/'+routes[a.getAttribute('href')]);}
+});
+const VISITOR_KEY='ann-ung-visitor-v1';
+function defaultProgress(){return {stamps:[],visits:0,fakeDoorClicks:0,docsSeen:[],formQueue:0,logoClicks:0,gAttempts:0,lastRoom:'recepcion',gMeaning:''};}
+function loadProgress(){
+ try{const v=JSON.parse(localStorage.getItem(VISITOR_KEY)||'null');return Object.assign(defaultProgress(),v&&typeof v==='object'?v:{});}
+ catch(e){return defaultProgress();}
+}
+let progress=loadProgress();
+function saveProgress(){try{localStorage.setItem(VISITOR_KEY,JSON.stringify(progress));}catch(e){/* Navegación privada: el juego sigue, aunque el archivo no recuerde. */}}
+function stampNames(){
+ return {resize:'Letra en su sitio',hint:'La pista no solicitada',wall:'Arquitecto de paredes',form:'Monigote certificado',document:'Acceso a lo inaccesible',archivist:'Archivero/a del vacío',babel:'Políglota por accidente','g-hunter':'Cazador/a de G',regular:'Visitante frecuente',secret:'Curiosidad de sótano',faq:'Pregunta incómoda',reset:'Reinicio estratégico'};
+}
+function renderPassport(){
+ const earned=new Set(progress.stamps||[]);
+ $('.stamp-card').forEach(card=>card.classList.toggle('earned',earned.has(card.dataset.stamp)));
+ $('#stampCount').textContent=earned.size+' / 12';
+ const visits=$('#visitCount');if(visits)visits.textContent='VISITA N.º '+progress.visits;
+}
+function awardStamp(id){
+ if(!id||!stampNames()[id]||(progress.stamps||[]).includes(id))return;
+ progress.stamps.push(id);saveProgress();renderPassport();
+ toast('SELLO OBTENIDO: '+stampNames()[id]+'. El documento no tiene valor legal, pero sí bastante tinta.');
+}
+function enterSecret(reason){
+ awardStamp('secret');talk('¿CÓMO HAS ENCONTRADO EL SÓTANO? ¡Este nivel no aparece en ningún plano! Bueno, ya que estás aquí: por favor no hagas un plano.','¡¿CÓMO?! · ACCESO NO CONTEMPLADO');
+ $('#secretFeedback').textContent='Acceso concedido por error. Motivo: '+reason+'. Este permiso caduca en cuanto alguien lo lea.';
+ $('#secretFeedback').classList.add('show');navigateRoom('sotano');
+}
+function loopBack(){
+ loopCount++;progress.gAttempts=(progress.gAttempts||0)+1;saveProgress();$('#loopCount').textContent='ESTADO: EXPLICACIÓN INMINENTE · CONTADOR DE INMINENCIA: '+loopCount;
+ const choices=['¡Excelente! Ya casi llegamos a la G. Antes, refresquemos ANN. Es importante recordar por qué empezamos.','La G será la siguiente parada. Esta ruta tiene una sola parada y un número extraordinario de rotondas.','Ha llegado a la explicación previa a la explicación definitiva. La explicación definitiva ha solicitado una prórroga.','¡Todo está clarísimo! Para celebrarlo, repetiremos la introducción con una claridad renovada y resultados idénticos.'];
+ if(loopCount>=7){
+  $('#gConfession').hidden=false;$('#finalBtn').disabled=true;$('#finalBtn').textContent='La G ha delegado su explicación';
+  awardStamp('g-hunter');
+  talk('Voy a decirte la verdad: no sé qué significa la G. Esperaba que tú lo descubrieras. Después de siete desvíos, me parece justo admitirlo. ¿Qué te gustaría que significara?','…BUENO, YA QUE LO HICISTE…');
+  $('#gConfession').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+  toast('NUEVO ESTADO: misterio transferido al visitante. Recursos Humanos niega conocer al visitante.');
+  return;
+ }
+ talk(choices[Math.min(loopCount-1,3)],loopCount>=4?'RENDIDO · DESVÍO OFICIAL N.º '+String(loopCount).padStart(2,'0'):'¿EN SERIO? · DESVÍO OFICIAL N.º '+String(loopCount).padStart(2,'0'));
+ $('#nosotros').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+ toast('Ha solicitado G. El sistema ha entendido «volver a empezar».');
+}
 
 /* Ajustes de lectura y primera misión didáctica. Nada se guarda ni se envía. */
 let readerLevel=0;
@@ -515,6 +588,94 @@ const oldSetLanguageApply = applyLanguage;
 
 renderReaderLevel();
 applyLanguage('es');
+
+/* Persistencia local y bromas con consecuencias. */
+progress.visits=(progress.visits||0)+1;saveProgress();
+if(progress.visits>=3)awardStamp('regular');
+renderPassport();
+if(progress.lastRoom && location.hash==='' && progress.lastRoom!=='recepcion'){
+  // Recordamos la sala del carnet, no forzamos un salto en la cara al visitante.
+  const room=$('#roomNow');if(room)room.textContent='Recepción (el carnet recuerda '+progress.lastRoom+')';
+}
+$('#fakeDoor').addEventListener('click',()=>{
+ progress.fakeDoorClicks=(progress.fakeDoorClicks||0)+1;saveProgress();
+ const excuses=[
+ 'La puerta está en modo cuadro. Por favor, admire su funcionalidad.',
+ 'Esta puerta fue instalada por el Departamento de Perspectivas. Solo sirve para mirar.',
+ '¿Ha probado abrirla desde el otro lado? Nosotros tampoco tenemos el otro lado.',
+ 'La puerta se encuentra temporalmente cerrada por ser una pared.',
+ 'Su solicitud se ha enviado al comité de bisagras. No se han detectado bisagras.',
+ 'La pared agradece su interés. La pared no hará declaraciones.',
+ '¡SELLO OBTENIDO! Ha abierto la puerta más resistente del edificio: la que no existe. Aquí tiene su premio administrativo.'
+ ];
+ const index=Math.min(progress.fakeDoorClicks-1,excuses.length-1);
+ $('#fakeDoorResult').textContent=excuses[index];
+ if(progress.fakeDoorClicks>=7){awardStamp('wall');talk(excuses[index],'¡¿CÓMO?! · ARQUITECTURA');}
+ else talk(excuses[index],progress.fakeDoorClicks%2?'¿EN SERIO?':'ARCHIVO DE PAREDES');
+});
+$('#captchaBtn').addEventListener('click',()=>{
+ $('#formFeedback').className='mission-feedback success show';
+ $('#formFeedback').textContent='Identidad aceptada provisionalmente. Nuestro algoritmo ha detectado un 12 % de monigote y un 88 % de persona con paciencia.';
+ awardStamp('form');talk('¡Verificado! Has demostrado que no eres un robot. El equipo técnico está haciendo preguntas sobre mí.','RADIANtE · CAPTCHA');
+});
+$('#queueBtn').addEventListener('click',()=>{
+ progress.formQueue=(progress.formQueue||0)+1;saveProgress();
+ const n=progress.formQueue;const q=$('#queueFeedback');q.hidden=false;q.textContent='SU TURNO: '+(846+n*37)+'. Personas por delante: '+(n*12+4)+'. Tiempo de espera: «en breve», unidad de tiempo todavía en desarrollo.';
+ $('#formFeedback').textContent='Número emitido correctamente. Si pierde este número, deberá solicitar un número para solicitar otro número.';
+ talk('¡Su turno es el '+(846+n*37)+'! No le llamaremos por el número. Queremos preservar la sorpresa.','VENTANILLA 03 · ATENCIÓN PERSONALIZADA');
+});
+$('#fileFormBtn').addEventListener('click',()=>{
+ $('#formFeedback').className='mission-feedback hint show';
+ $('#formFeedback').textContent='Formulario recibido. Se ha desmarcado automáticamente para protegerlo de una aceptación prematura. La ventanilla queda abierta hasta nuevo aviso.';
+ talk('Su formulario ha sido recibido, leído y desmarcado. Una operación impecable.','ARCHIVO Y CONTROL DE DAÑOS');
+});
+$('[data-doc]').forEach(b=>b.addEventListener('click',()=>{
+ const id=b.dataset.doc;
+ if(!(progress.docsSeen||[]).includes(id)){progress.docsSeen.push(id);saveProgress();awardStamp('document');}
+ if(['doc1','doc2','doc3'].every(x=>(progress.docsSeen||[]).includes(x)))awardStamp('archivist');
+}));
+$('#readHint').addEventListener('click',()=>awardStamp('hint'));
+$('#fontUp').addEventListener('click',()=>{if(readerLevel>0)awardStamp('resize');});
+$('#readReset').addEventListener('click',()=>awardStamp('reset'));
+$('.faq summary').forEach(el=>el.addEventListener('click',()=>{if(el.textContent.toLowerCase().includes('g'))awardStamp('faq');}));
+$('[data-lang]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.lang==='babel')awardStamp('babel');}));
+$('#secretAgainBtn').addEventListener('click',()=>{ $('#secretFeedback').classList.remove('show');talk('La anomalía ha sido reiniciada. La anomalía ha presentado una queja por uso indebido de la palabra reiniciar.','REINICIO ESTRATÉGICO');navigateRoom('pasillo');});
+let logoClicks=0, secretKeys='';
+const brand=$('.logo');
+brand.addEventListener('click',e=>{
+ logoClicks++;progress.logoClicks=logoClicks;saveProgress();
+ if(logoClicks>=7){e.preventDefault();logoClicks=0;enterSecret('siete clics ceremoniales sobre el logotipo');}
+});
+document.addEventListener('keydown',e=>{
+ const sequence=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+ window.annUngKonami=window.annUngKonami||[];
+ window.annUngKonami.push(e.key);if(window.annUngKonami.length>sequence.length)window.annUngKonami.shift();
+ if(sequence.every((key,i)=>window.annUngKonami[i]===key))enterSecret('código de Konami');
+ if(e.key.length===1&&!e.ctrlKey&&!e.altKey&&!e.metaKey){
+  secretKeys=(secretKeys+e.key.toLowerCase()).slice(-32);
+  if(secretKeys.endsWith('keine ahnung')){secretKeys='';enterSecret('la frase que nadie ha escrito');}
+ }
+});
+$('#finalBtn').addEventListener('click',()=>{if(loopCount>=7)return;});
+$('#submitG').addEventListener('click',()=>{
+ const field=$('#gMeaning'),meaning=field.value.trim();
+ if(!meaning){$('#gResult').className='mission-feedback hint show';$('#gResult').textContent='Una teoría en blanco es la teoría que ya teníamos. Escriba algo, aunque sea «Galletas». Las galletas siempre reciben apoyo administrativo.';field.focus();talk('¡No puedes dejar la G en blanco! Es mi trabajo dejar cosas en blanco. Busca otra responsabilidad.','¿EN SERIO?');return;}
+ progress.gMeaning=meaning;saveProgress();
+ const output='Tu G significa: '+meaning+'. La organización no lo confirma ni desmiente. El canon oficial continúa en blanco.';
+ $('#gResult').className='mission-feedback success show';$('#gResult').textContent=output+' — Carnet de visitante Ann-Ung · '+progress.stamps.length+'/12 sellos.';
+ $('#shareG').disabled=false;
+ awardStamp('g-hunter');
+ talk('Lo has escrito tú. Por tanto, no es una respuesta oficial. Es mucho mejor: es una respuesta que Recursos Humanos no puede revocar.','…BUENO, YA QUE LO HICISTE…');
+});
+$('#shareG').addEventListener('click',async()=>{
+ const meaning=progress.gMeaning||$('#gMeaning').value.trim();
+ if(!meaning)return;
+ const card='ANN-UNG · CARNET DE VISITANTE\\nMi G significa: '+meaning+'\\nSellos obtenidos: '+progress.stamps.length+'/12\\nLa organización no confirma ni desmiente.\\n'+location.origin+location.pathname;
+ try{await navigator.clipboard.writeText(card);toast('Carnet copiado. Puedes compartirlo si deseas.');}
+ catch(e){$('#gResult').textContent=card+' — Selecciona el texto y cópialo manualmente.';}
+});
+
+if(location.hash.startsWith('#/'))setTimeout(syncRoomRoute,80);
 
 })();
 </script></body></html>
