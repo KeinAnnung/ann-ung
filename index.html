@@ -64,6 +64,10 @@ section[id]{scroll-margin-top:148px}
 @media print{body *{visibility:hidden!important}.help-card,.help-card *{visibility:visible!important}.help-card{position:absolute;left:20px;top:20px;width:calc(100% - 40px);box-shadow:none;border:1px solid #777}}
 @media(max-width:800px){.mission-grid{grid-template-columns:1fr}.email-part{min-height:60px}.move-buttons button{width:40px;height:36px}.risk-message{min-height:64px}.word-bank button{min-height:44px}}
 
+
+.no-open-repeat{color:#ff4269!important;border-color:#ff4269!important;text-shadow:0 0 7px #ff174d66;box-shadow:0 0 10px #ff174d2b;transition:transform .2s ease,opacity .2s}
+.no-open-repeat:hover{box-shadow:0 0 18px #ff174d66}
+
 </style></head>
 <body>
 <div class="top-alert"><b>AVISO LEGAL:</b> esta visita es voluntaria. Para retirarse, complete el formulario de salida voluntaria.</div>
@@ -362,7 +366,7 @@ document.addEventListener('pointermove',e=>{if(matchMedia('(prefers-reduced-moti
 const ROOM_TARGETS={recepcion:'inicio',pasillo:'pasillo',nosotros:'nosotros',equipo:'equipo','ventanilla-3':'ventanilla-3',archivo:'archivo',aprender:'aprender',faq:'preguntas','sala-g':'g',sotano:'sotano',carnet:'passport'};
 function navigateRoom(room){
  const target=ROOM_TARGETS[room]?room:'pasillo';
- try{progress.lastRoom=target;saveProgress();}catch(e){}
+ try{progress.pendingRoom=target;saveProgress();}catch(e){}
  const desired='#/'+target;
  if(location.hash!==desired)location.hash=desired;else scrollToRoom(target);
 }
@@ -370,9 +374,14 @@ function scrollToRoom(room){
  const id=ROOM_TARGETS[room]||'pasillo';
  const node=document.getElementById(id);
  if(node)node.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
- const roomText={recepcion:'Recepción',pasillo:'Pasillo de puertas',nosotros:'Quiénes somos',equipo:'Nuestro equipo','ventanilla-3':'Ventanilla 3',archivo:'Archivo',aprender:'Laboratorio de habilidades',faq:'Preguntas frecuentes','sala-g':'Sala de la G',sotano:'Sótano',carnet:'Carnet del visitante'};
- const here=$('#roomNow');if(here)here.textContent=roomText[room]||'Ubicación no registrada';
- try{progress.lastRoom=room;saveProgress();}catch(e){}
+ const lang=(currentLang==='babel'?'es':(currentLang||'es'));
+ const roomText={
+ es:{recepcion:'Recepción',pasillo:'Pasillo de puertas',nosotros:'Quiénes somos',equipo:'Nuestro equipo','ventanilla-3':'Ventanilla 3',archivo:'Archivo',aprender:'Laboratorio de habilidades',faq:'Preguntas frecuentes','sala-g':'Sala de la G',sotano:'Sótano',carnet:'Carnet del visitante'},
+ en:{recepcion:'Reception',pasillo:'Hallway of doors',nosotros:'Who we are',equipo:'Our team','ventanilla-3':'Window 3',archivo:'Archive',aprender:'Digital skills lab',faq:'FAQ','sala-g':'Room G',sotano:'Basement',carnet:'Visitor card'},
+ de:{recepcion:'Empfang',pasillo:'Türflur',nosotros:'Wer wir sind',equipo:'Unser Team','ventanilla-3':'Schalter 3',archivo:'Archiv',aprender:'Labor für digitale Fähigkeiten',faq:'FAQ','sala-g':'Raum G',sotano:'Keller',carnet:'Besucherausweis'}
+ };
+ const here=$('#roomNow');if(here)here.textContent=(roomText[lang]&&roomText[lang][room])||'…';
+ try{if(progress.lastRoom!==room)progress.previousRoom=progress.lastRoom;progress.lastRoom=room;progress.pendingRoom='';saveProgress();}catch(e){}
 }
 function syncRoomRoute(){
  if(!location.hash.startsWith('#/'))return;
@@ -415,19 +424,25 @@ function enterSecret(reason){
  $('#secretFeedback').classList.add('show');navigateRoom('sotano');
 }
 function loopBack(){
- loopCount++;progress.gAttempts=(progress.gAttempts||0)+1;saveProgress();$('#loopCount').textContent='ESTADO: EXPLICACIÓN INMINENTE · CONTADOR DE INMINENCIA: '+loopCount;
- const choices=['¡Excelente! Ya casi llegamos a la G. Antes, refresquemos ANN. Es importante recordar por qué empezamos.','La G será la siguiente parada. Esta ruta tiene una sola parada y un número extraordinario de rotondas.','Ha llegado a la explicación previa a la explicación definitiva. La explicación definitiva ha solicitado una prórroga.','¡Todo está clarísimo! Para celebrarlo, repetiremos la introducción con una claridad renovada y resultados idénticos.'];
+ loopCount++;progress.gAttempts=(progress.gAttempts||0)+1;saveProgress();
+ $('#loopCount').textContent=localized('imminencePrefix')+loopCount;
+ const base=currentLang==='babel'?'es':currentLang;
+ const choices={
+ es:['¡Excelente! Ya casi llegamos a la G. Antes, refresquemos ANN. Es importante recordar por qué empezamos.','La G será la siguiente parada. Esta ruta tiene una sola parada y un número extraordinario de rotondas.','Ha llegado a la explicación previa a la explicación definitiva. La explicación definitiva ha solicitado una prórroga.','¡Todo está clarísimo! Para celebrarlo, repetiremos la introducción con una claridad renovada y resultados idénticos.'],
+ en:['Excellent! We are almost at G. First, let us refresh ANN. It is important to remember why we started.','G is the next stop. This route has one stop and an extraordinary number of roundabouts.','You have reached the explanation before the definitive explanation. The definitive explanation has requested an extension.','Everything is perfectly clear! To celebrate, we shall repeat the introduction with renewed clarity and identical results.'],
+ de:['Ausgezeichnet! Wir sind fast bei G. Zuerst wiederholen wir ANN. Es ist wichtig, sich an den Anfang zu erinnern.','G ist der nächste Halt. Diese Route hat einen Halt und außergewöhnlich viele Kreisverkehre.','Sie haben die Erklärung vor der endgültigen Erklärung erreicht. Die endgültige Erklärung hat eine Fristverlängerung beantragt.','Alles ist völlig klar! Zur Feier wiederholen wir die Einführung mit neuer Klarheit und identischen Ergebnissen.']
+ };
  if(loopCount>=7){
-  $('#gConfession').hidden=false;$('#finalBtn').disabled=true;$('#finalBtn').textContent='La G ha delegado su explicación';
+  $('#gConfession').hidden=false;$('#finalBtn').disabled=true;$('#finalBtn').textContent=localized('gDelegated');
   awardStamp('g-hunter');
-  talk('Voy a decirte la verdad: no sé qué significa la G. Esperaba que tú lo descubrieras. Después de siete desvíos, me parece justo admitirlo. ¿Qué te gustaría que significara?','…BUENO, YA QUE LO HICISTE…');
-  $('#gConfession').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
-  toast('NUEVO ESTADO: misterio transferido al visitante. Recursos Humanos niega conocer al visitante.');
-  return;
+  talk(localized('gConfessionLine'),'…BUENO, YA QUE LO HICISTE…');
+  navigateRoom('sala-g');toast(localized('gTransferred'));return;
  }
- talk(choices[Math.min(loopCount-1,3)],loopCount>=4?'RENDIDO · DESVÍO OFICIAL N.º '+String(loopCount).padStart(2,'0'):'¿EN SERIO? · DESVÍO OFICIAL N.º '+String(loopCount).padStart(2,'0'));
- $('#nosotros').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
- toast('Ha solicitado G. El sistema ha entendido «volver a empezar».');
+ const label=loopCount>=4
+  ?({'es':'RENDIDO · DESVÍO OFICIAL N.º ','en':'SURRENDERED · OFFICIAL DETOUR NO. ','de':'AUFGEGEBEN · AMTLICHER UMWEG NR. '}[base]+String(loopCount).padStart(2,'0'))
+  :({'es':'¿EN SERIO? · DESVÍO OFICIAL N.º ','en':'SERIOUSLY? · OFFICIAL DETOUR NO. ','de':'IM ERNST? · AMTLICHER UMWEG NR. '}[base]+String(loopCount).padStart(2,'0'));
+ talk(choices[base][Math.min(loopCount-1,3)],label);
+ navigateRoom('nosotros');toast(localized('loopToast'));
 }
 
 /* Ajustes de lectura y primera misión didáctica. Nada se guarda ni se envía. */
