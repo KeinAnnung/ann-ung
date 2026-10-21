@@ -69,6 +69,75 @@ section[id]{scroll-margin-top:148px}
 .no-open-repeat:hover{box-shadow:0 0 18px #ff174d66}
 
 .mission-card.completed,.mission-box.completed{border-color:var(--cyan)!important;box-shadow:inset 0 0 22px #72f3df0a}.mission-card.completed:after{content:"✓ COMPLETADA";display:block;margin-top:12px;color:var(--cyan);font:9px var(--mono);letter-spacing:.08em}.mission-box.completed{border-style:solid}
+
+/* Sr. Monigote: un asistente flotante que acompaña sin secuestrar la pantalla. */
+.ann-guide{position:fixed;right:clamp(10px,2.2vw,26px);bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:10020;display:flex;flex-direction:column;align-items:flex-end;gap:10px;font-family:var(--sans,system-ui,sans-serif);pointer-events:none}
+.ann-guide *{box-sizing:border-box}
+.ann-guide button,.ann-guide input,.ann-guide textarea{font:inherit}
+.ann-guide button{cursor:pointer}
+.ann-guide button:focus-visible,.ann-guide input:focus-visible,.ann-guide textarea:focus-visible{outline:3px solid #ffdf3d;outline-offset:3px}
+.ann-guide-launcher{pointer-events:auto;position:relative;display:flex;align-items:center;gap:7px;min-width:74px;min-height:74px;max-width:min(310px,calc(100vw - 24px));padding:5px 14px 5px 5px;border:3px solid #211832;border-radius:42px;background:#8f70d8;color:#211832;box-shadow:5px 6px 0 #211832,0 8px 30px #0007;transition:transform .18s ease,background .18s ease;animation:annGuideIdle 4.4s ease-in-out infinite;overflow:visible}
+.ann-guide-launcher:hover{transform:translateY(-3px) rotate(-1deg);background:#a891ee}
+.ann-guide-launcher:active{transform:translateY(1px) scale(.98)}
+.ann-guide-mascot{display:block;flex:0 0 62px;width:62px;height:62px;border-radius:50%;overflow:hidden;background:#a891ee;border:2px solid #211832}
+.ann-guide-mascot svg{display:block!important;width:100%!important;height:100%!important;max-width:none!important;overflow:visible}
+.ann-guide-mascot svg .expression{display:none!important}
+.ann-guide-mascot svg[data-expression="main"] [data-face="main"],.ann-guide-mascot svg[data-expression="radiant"] [data-face="radiant"],.ann-guide-mascot svg[data-expression="crossed"] [data-face="crossed"],.ann-guide-mascot svg[data-expression="surprised"] [data-face="surprised"],.ann-guide-mascot svg[data-expression="whisper"] [data-face="whisper"],.ann-guide-mascot svg[data-expression="furious"] [data-face="furious"],.ann-guide-mascot svg[data-expression="resigned"] [data-face="resigned"]{display:block!important}
+.ann-guide-launcher-label{display:flex;flex-direction:column;text-align:left;line-height:1.15;min-width:0}
+.ann-guide-launcher-label b{font:900 11px var(--mono,monospace);letter-spacing:.045em;white-space:nowrap}
+.ann-guide-launcher-label small{font-size:10px;font-weight:700;margin-top:4px;white-space:nowrap}
+.ann-guide-comic-star{position:absolute;right:-3px;top:-12px;display:grid;place-items:center;width:29px;height:31px;background:#ffdf3d;color:#d92c55;font:1000 23px/1 var(--mono,monospace);border:2px solid #211832;clip-path:polygon(50% 0,62% 25%,91% 10%,82% 40%,100% 55%,70% 64%,79% 96%,49% 78%,26% 100%,26% 70%,0 62%,24% 43%,9% 20%,40% 25%);filter:drop-shadow(2px 3px 0 #211832);animation:annGuideStar 1.8s steps(2,end) infinite}
+.ann-guide-bubble{pointer-events:auto;position:relative;width:min(310px,calc(100vw - 24px));padding:16px 18px 15px;background:#fff4d9;color:#211832;border:3px solid #211832;border-radius:18px 18px 18px 4px;box-shadow:5px 6px 0 #211832,0 8px 30px #0005;font-size:13px;line-height:1.45;transform-origin:90% 100%;animation:annGuidePop .24s cubic-bezier(.2,1.6,.4,1) both}
+.ann-guide-bubble:after{content:"";position:absolute;right:27px;bottom:-15px;width:21px;height:19px;background:#fff4d9;border-right:3px solid #211832;border-bottom:3px solid #211832;transform:skewY(33deg) rotate(9deg)}
+.ann-guide-bubble.show{display:block}
+.ann-guide-bubble[hidden]{display:none}
+.ann-guide-bubble-close{position:absolute;right:5px;top:3px;border:0;background:none;color:#211832;font-size:20px;line-height:1}
+.ann-guide-comic-label{display:block;color:#d92c55;font:1000 10px var(--mono,monospace);letter-spacing:.12em;margin-bottom:5px}
+.ann-guide-panel{pointer-events:auto;display:flex;flex-direction:column;width:min(372px,calc(100vw - 22px));max-height:min(72vh,670px);background:#13101c;color:#fbf5ff;border:2px solid #211832;border-radius:18px;box-shadow:7px 8px 0 #211832,0 20px 60px #0009;overflow:hidden;animation:annGuidePanelIn .22s cubic-bezier(.2,1.3,.3,1) both}
+.ann-guide-panel[hidden]{display:none}
+.ann-guide-head{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#8f70d8;color:#211832;border-bottom:3px solid #211832}
+.ann-guide-panel-badge{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;background:#ffdf3d;clip-path:polygon(50% 0,61% 23%,91% 12%,79% 39%,100% 54%,70% 66%,80% 100%,49% 79%,23% 100%,27% 68%,0 62%,23% 42%,10% 19%,41% 24%);font:1000 23px var(--mono,monospace);color:#d92c55}
+.ann-guide-head-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.ann-guide-head-copy strong{font-size:14px;font-weight:900}
+.ann-guide-head-copy small{font-size:10px;opacity:.85}
+.ann-guide-minimize,.ann-guide-close{display:grid;place-items:center;width:29px;height:29px;padding:0;border:2px solid #211832;border-radius:7px;background:#fff4d9;color:#211832;font-weight:1000;font-size:18px}
+.ann-guide-messages{display:flex;flex-direction:column;gap:9px;padding:13px;overflow:auto;overscroll-behavior:contain;min-height:110px;max-height:34vh;background:radial-gradient(ellipse at top right,#8f70d81c,transparent 70%)}
+.ann-guide-message{max-width:94%;align-self:flex-start;padding:10px 12px;border:1px solid #ffffff21;border-radius:12px 12px 12px 3px;background:#211b30;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.ann-guide-message.user{align-self:flex-end;background:#17403c;border-color:#72f3df70;border-radius:12px 12px 3px 12px}
+.ann-guide-message p{margin:4px 0 0;white-space:pre-wrap}
+.ann-guide-who{font:900 9px var(--mono,monospace);letter-spacing:.065em;color:#72f3df}
+.ann-guide-message.user .ann-guide-who{color:#ffe4e4}
+.ann-guide-message.thinking p:after{content:"";display:inline-block;width:16px;height:4px;margin-left:5px;border-radius:6px;background:currentColor;animation:annGuideBlink .6s steps(2,end) infinite}
+.ann-guide-shortcuts{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 10px}
+.ann-guide-shortcuts button{border:1px solid #c5a7ff68;border-radius:999px;background:#211735;color:#eae0ff;padding:7px 9px;font-size:10px}
+.ann-guide-shortcuts button:hover{background:#49346e}
+.ann-guide-form{display:flex;align-items:flex-end;gap:8px;padding:10px;border-top:1px solid #ffffff22;background:#0b0a10}
+.ann-guide-form textarea{flex:1;resize:vertical;min-height:42px;max-height:112px;border:1px solid #ffffff38;border-radius:10px;background:#1c1728;color:#fff;padding:10px;font-size:12px;line-height:1.4}
+.ann-guide-form textarea::placeholder{color:#c5bbd1}
+.ann-guide-form button{width:42px;height:42px;border:2px solid #211832;border-radius:10px;background:#72f3df;color:#151021;font-size:23px;font-weight:1000}
+.ann-guide-settings{padding:11px 12px;background:#211b30;border-top:1px dashed #ffffff42}
+.ann-guide-settings[hidden]{display:none}
+.ann-guide-settings label{display:block;font-size:10px;font-weight:800;margin-bottom:6px}
+.ann-guide-settings input{width:100%;min-height:38px;padding:8px;border-radius:8px;border:1px solid #ffffff45;background:#0b0a10;color:#fff;font-size:11px}
+.ann-guide-setting-actions{display:flex;gap:7px;margin-top:8px}
+.ann-guide-setting-actions button{border:1px solid #ffffff37;border-radius:8px;padding:7px 10px;background:#8f70d8;color:#211832;font-size:10px;font-weight:800}
+.ann-guide-settings small{display:block;margin-top:7px;font-size:9px;color:#b7adc8;line-height:1.4}
+.ann-guide-foot{padding:9px 12px 11px;background:#0b0a10;border-top:1px solid #ffffff19}
+.ann-guide-foot>span{font:9px var(--mono,monospace);color:#72f3df}
+.ann-guide-foot>button{float:right;border:0;padding:0;background:none;color:#c5a7ff;text-decoration:underline;font-size:10px}
+.ann-guide-foot p{clear:both;margin:7px 0 0;color:#a79cb9;font-size:9px;line-height:1.4}
+.ann-guide-sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.ann-guide.is-shouting .ann-guide-launcher{animation:annGuideShout .28s steps(2,end) 2}
+.ann-guide.is-shouting .ann-guide-mascot{filter:drop-shadow(0 0 7px #ff4269)}
+@keyframes annGuideIdle{0%,84%,100%{transform:translateY(0) rotate(0)}87%{transform:translateY(-6px) rotate(-3deg)}90%{transform:translateY(1px) rotate(2deg)}93%{transform:translateY(-3px) rotate(-1deg)}}
+@keyframes annGuideStar{0%,100%{transform:scale(1) rotate(-7deg)}50%{transform:scale(1.15) rotate(8deg)}}
+@keyframes annGuidePop{0%{opacity:0;transform:translateY(12px) scale(.75) rotate(3deg)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+@keyframes annGuidePanelIn{0%{opacity:0;transform:translateY(12px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes annGuideBlink{0%,100%{opacity:.2}50%{opacity:1}}
+@keyframes annGuideShout{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(6px) rotate(4deg)}50%{transform:translateX(-5px) rotate(-4deg)}75%{transform:translateX(4px) rotate(2deg)}}
+@media(max-width:540px){.ann-guide{right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));gap:8px}.ann-guide-launcher{min-width:68px;min-height:68px;max-width:calc(100vw - 16px);padding-right:10px}.ann-guide-mascot{flex-basis:56px;width:56px;height:56px}.ann-guide-launcher-label b{font-size:10px}.ann-guide-launcher-label small{font-size:9px}.ann-guide-panel{width:min(390px,calc(100vw - 16px));max-height:74dvh}.ann-guide-messages{max-height:31dvh}.ann-guide-bubble{width:min(285px,calc(100vw - 16px))}}
+@media(prefers-reduced-motion:reduce){.ann-guide-launcher,.ann-guide-comic-star,.ann-guide-bubble,.ann-guide-panel,.ann-guide.is-shouting .ann-guide-launcher{animation:none!important;transition:none!important}}
+
 </style></head>
 <body>
 <div class="top-alert"><b>AVISO LEGAL:</b> esta visita es voluntaria. Para retirarse, complete el formulario de salida voluntaria.</div>
@@ -290,6 +359,52 @@ section[id]{scroll-margin-top:148px}
 </main>
 <footer class="footer"><div class="wrap"><strong>// ANN-UNG · EXPLICANDO EL UNIVERSO DESDE QUE TENEMOS MEMORIA //</strong>© 2026 Ann-Ung Dynasties. Todos los derechos reservados en esta y otras líneas temporales.<br>Esta web contiene humor, contradicciones y trámites ficticios. No se han retenido lectores contra su voluntad, según la definición interna de «retenido».<br><span class="tiny" style="display:block;margin-top:12px">BUILT FROM A TYPO. RUNNING ON PURPOSE.</span><a href="#inicio" style="display:inline-block;margin-top:13px;color:var(--violet)">Volver al principio (este sí es el principio, probablemente).</a></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div><div class="modalback" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="kicker" id="modalKicker">COMUNICADO</div><h3 id="modalTitle">Documento solicitado</h3><p id="modalBody"></p><div class="redact-line" id="modalRedact"></div><div class="modalbuttons"><button class="btn primary" id="modalOk">Entendido (no entendido)</button><button class="btn" id="modalBack">Volver a la explicación anterior</button></div></div></div>
+
+<aside id="annGuide" class="ann-guide" aria-label="Asistente flotante del Monigote">
+ <div id="annGuideBubble" class="ann-guide-bubble" role="status" aria-live="polite" hidden>
+  <button type="button" id="annGuideBubbleClose" class="ann-guide-bubble-close" aria-label="Cerrar mensaje">×</button>
+  <span class="ann-guide-comic-label">¡EH, TÚ!</span>
+  <span id="annGuideBubbleText">Puedo ayudarte. La G no entra en el contrato.</span>
+ </div>
+ <button type="button" id="annGuideToggle" class="ann-guide-launcher" aria-expanded="false" aria-controls="annGuidePanel" aria-label="Abrir al Monigote">
+  <span id="annGuideMascot" class="ann-guide-mascot" aria-hidden="true"></span>
+  <span class="ann-guide-launcher-label"><b>¡EH, TÚ!</b><small>¿Necesitas ayuda?</small></span>
+  <span class="ann-guide-comic-star" aria-hidden="true">!</span>
+ </button>
+ <section id="annGuidePanel" class="ann-guide-panel" aria-labelledby="annGuideTitle" hidden>
+  <header class="ann-guide-head">
+   <span class="ann-guide-panel-badge" aria-hidden="true">!</span>
+   <div class="ann-guide-head-copy"><strong id="annGuideTitle">Sr. Monigote</strong><small id="annGuideStatus">Modo de prueba · IA sin conectar</small></div>
+   <button type="button" id="annGuideMinimize" class="ann-guide-minimize" aria-label="Minimizar asistente">—</button>
+   <button type="button" id="annGuideClose" class="ann-guide-close" aria-label="Cerrar asistente">×</button>
+  </header>
+  <div id="annGuideMessages" class="ann-guide-messages" role="log" aria-live="polite" aria-relevant="additions text">
+   <div class="ann-guide-message assistant"><span class="ann-guide-who">MONIGOTE · PORTAVOZ</span><p>¡Por fin! Alguien ha abierto el canal de ayuda. Puedo orientarte, explicar la web y contestar preguntas cuando el motor IA esté conectado. La G queda fuera de jurisdicción.</p></div>
+  </div>
+  <div class="ann-guide-shortcuts" aria-label="Accesos rápidos">
+   <button type="button" data-ann-prompt="help">Necesito ayuda</button>
+   <button type="button" data-ann-prompt="where">¿Dónde estoy?</button>
+   <button type="button" data-ann-prompt="learn">Consejo digital</button>
+  </div>
+  <form id="annGuideForm" class="ann-guide-form">
+   <label class="ann-guide-sr-only" for="annGuideInput">Escribe una consulta</label>
+   <textarea id="annGuideInput" rows="2" maxlength="600" placeholder="Pregunta lo que quieras… (menos la G)" required></textarea>
+   <button id="annGuideSend" type="submit" aria-label="Enviar pregunta">↗</button>
+  </form>
+  <div id="annGuideSettings" class="ann-guide-settings" hidden>
+   <label for="annGuideEndpoint">URL del Worker IA (termina en /chat)</label>
+   <input id="annGuideEndpoint" type="url" inputmode="url" placeholder="https://tu-worker.tu-subdominio.workers.dev/chat" autocomplete="url">
+   <div class="ann-guide-setting-actions"><button id="annGuideSaveEndpoint" type="button">Guardar conexión</button><button id="annGuideCancelEndpoint" type="button">Cancelar</button></div>
+   <small>La dirección se guarda solo en este navegador. No pegues aquí claves ni tokens.</small>
+  </div>
+  <footer class="ann-guide-foot">
+   <span id="annGuideEngineNote">Motor IA no conectado · respuestas de ensayo</span>
+   <button id="annGuideConfigure" type="button">Configurar IA</button>
+   <p>No introduzcas contraseñas ni datos sensibles. La IA puede equivocarse; la G no se revela.</p>
+  </footer>
+ </section>
+</aside>
+
 <script>
 (()=>{
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -353,7 +468,7 @@ $('#leaveBtn').addEventListener('click',()=>showModal(localized('exitTitle'),loc
 $$('[data-say-id]').forEach(b=>b.addEventListener('click',()=>talk(dialogue(b.dataset.sayId),'ACLARACIÓN DEL PORTAVOZ')));
 $$('[data-loop]').forEach(b=>b.addEventListener('click',loopBack));
 $$('[data-doc]').forEach(b=>b.addEventListener('click',()=>{const box=$('#'+b.dataset.doc);box.classList.toggle('show');b.textContent=box.classList.contains('show')?'Volver a censurar':'Volver a revisar';talk(box.classList.contains('show')?'Se desclasificó la existencia del contenido, no el contenido. La organización agradece que no intente comprenderlo.':'Documento recensurado. Transparencia restaurada a niveles seguros.','ARCHIVO Y CONTROL DE DAÑOS');}));
-$('[data-modal]').forEach(b=>b.addEventListener('click',()=>b.dataset.modal==='transparencia'
+$$('[data-modal]').forEach(b=>b.addEventListener('click',()=>b.dataset.modal==='transparencia'
  ?showModal(localized('transparencyKicker'),localized('transparencyTitle'),localized('transparencyBody'),localized('transparencyStamp'))
  :showModal(localized('orgKicker'),localized('orgTitle'),localized('orgBody'),localized('orgStamp'))));
 $('#modalOk').addEventListener('click',()=>{closeModal();talk('Gracias por su comprensión. Que usted haya comprendido no es requisito para que agradezcamos su comprensión.','COMUNICADO DE CIERRE');});
@@ -584,7 +699,8 @@ function applyLanguage(lang){
  $$('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));
  $$('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;const text=(L[base]&&L[base][key]);if(text!==undefined)el.textContent=text;});
  $$('[data-i18n-html]').forEach(el=>{const key=el.dataset.i18nHtml;const text=(L[base]&&L[base][key]);if(text!==undefined)el.innerHTML=text;});
- $('#langLabel').textContent=localized('langLabel');$('.lang-switch').setAttribute('aria-label',localized('langGroupTitle'));
+ $('#langLabel').textContent=localized('langLabel');
+ if(typeof annGuideApplyLanguage==='function')annGuideApplyLanguage(base);$('.lang-switch').setAttribute('aria-label',localized('langGroupTitle'));
  $('#modalOk').textContent=localized('modalOkText');$('#modalBack').textContent=localized('modalBackText');
  $('#gMeaning').setAttribute('placeholder',localized('gMeaningPlaceholder'));
  $$('[data-email-up]').forEach(el=>el.setAttribute('aria-label',({es:'Mover arriba',en:'Move up',de:'Nach oben'}[base])));
@@ -785,6 +901,80 @@ Object.assign(L.de,{
  modalOkText:'Verstanden (nicht verstanden)',modalBackText:'Zur vorherigen Erklärung'
 });
 
+
+Object.assign(L.es,{
+ guideTitle:'Sr. Monigote',guideStatusAI:'En línea · IA conectada',guideStatusDemo:'Modo de prueba · IA sin conectar',
+ guideWelcome:'¡Por fin! Alguien ha abierto el canal de ayuda. Puedo orientarte, explicar la web y contestar preguntas cuando el motor IA esté conectado. La G queda fuera de jurisdicción.',
+ guidePlaceholder:'Pregunta lo que quieras… (menos la G)',guideSend:'Enviar pregunta',guideOpen:'Abrir al Monigote',guideMinimize:'Minimizar asistente',guideClose:'Cerrar asistente',
+ guideNeedHelp:'Necesito ayuda',guideWhere:'¿Dónde estoy?',guideDigital:'Consejo digital',guideConfigure:'Configurar IA',guideEndpointLabel:'URL del Worker IA (termina en /chat)',guideEndpointPlaceholder:'https://tu-worker.tu-subdominio.workers.dev/chat',guideSave:'Guardar conexión',guideCancel:'Cancelar',
+ guideNoData:'No introduzcas contraseñas ni datos sensibles. La IA puede equivocarse; la G no se revela.',
+ guideEngineOffline:'Motor IA no conectado · respuestas de ensayo',guideEngineOnline:'Motor IA conectado · respuestas remotas',guideConnectFirst:'El motor IA todavía no está conectado. Puedes probar mis respuestas de ensayo o configurar un Worker de Cloudflare. No, no pienso hacer la configuración por ti sin los permisos necesarios; soy el portavoz, no el departamento de infraestructura.',
+ guideInvalidEndpoint:'La URL debe empezar por https:// y terminar en /chat. No acepto direcciones misteriosas que empiecen con http.',guideSaved:'Conexión guardada en este navegador. Haré una prueba al enviar tu próxima consulta.',guideRemoved:'Configuración eliminada. Volvemos a las respuestas de ensayo.',
+ guideEmpty:'Escribe algo primero. Mi presupuesto de silencio es generoso, pero no infinito.',guideG:'¡JA! La G no entra en mi contrato, en mi jurisdicción ni en mi descripción de cargo. Puedo llevarte a la Sala de la G, pero su significado oficial sigue siendo un misterio. Pregunta otra cosa, criatura curiosa.',
+ guideHelp:'¡Respira! No estás solo/a en este edificio administrativo. Dime qué intentas hacer y te guío paso a paso. Para empezar, prueba los accesos de orientación, lectura o las misiones digitales. Prometo no abrir la G.',
+ guideWhereReply:'Mira el indicador de ubicación del pasillo, usa los enlaces del menú o abre la puerta «Volver al pasillo». Si te perdiste de verdad, no pasa nada: volver atrás es una habilidad, no una confesión.',
+ guideLearnReply:'Consejo útil: si un mensaje te mete prisa, pide contraseñas, códigos o dinero inesperado, no pulses el enlace. Verifica por otro canal oficial que ya conozcas. El cactus falso de nuestra misión no es una recomendación financiera.',
+ guideFallback:'Modo de ensayo: puedo orientar sobre esta web, ayudarte con hábitos digitales y mantener la compostura por un máximo de tres segundos. Para contestar cualquier consulta general necesito que el administrador despliegue el motor IA. Pulsa «Configurar IA» para enlazar un Worker. La G sigue excluida.',
+ guideOnline:'Respuesta recibida del motor IA. Recuerda: soy una personalidad ficticia con un modelo pequeño detrás, no una autoridad infalible.',
+ guideError:'No he conseguido conectar con el motor IA. Puede que el Worker aún no esté desplegado, haya alcanzado su límite gratuito o no acepte el origen de esta página. Puedo seguir en modo de ensayo mientras Infraestructura presenta sus excusas.',
+ guideGreeting:'¡Ah, una consulta! Hazla corta y clara. Tengo acceso a una máquina de pensar que cabe en un presupuesto pequeño.',
+ guideBubble1:'¿Necesitas algo? Estoy aquí. No es voluntario, pero sí remunerado en formularios.',
+ guideBubble2:'Te sigo. No literalmente: soy una capa fija de interfaz. Recursos Humanos sigue estudiando el asunto.',
+ guideBubble3:'¡ALTO AHÍ! Si necesitas orientación, toca mi cara. Es más económico que otro comité.',
+ guideBubble4:'¿Has probado leer el texto? Es una habilidad infravalorada por esta institución.',
+ guideBubble5:'No estoy escondido. Estoy estratégicamente fuera del organigrama.',
+ guideLocalPrefix:'MONIGOTE · PORTAVOZ',guideYou:'TÚ',guideThinking:'Calculando respuesta…',guideQuestionAboutG:'La G está fuera de jurisdicción. El resto del universo puede pasar por ventanilla.',
+ guideErrorToast:'El motor IA no respondió. Sigo aquí, por desgracia para ambos.'
+});
+Object.assign(L.en,{
+ guideTitle:'Mr. Monigote',guideStatusAI:'Online · AI connected',guideStatusDemo:'Test mode · AI not connected',
+ guideWelcome:'At last! Someone opened the help channel. I can guide you, explain this site, and answer questions when the AI engine is connected. G is outside my jurisdiction.',
+ guidePlaceholder:'Ask me anything… (except G)',guideSend:'Send question',guideOpen:'Open Monigote',guideMinimize:'Minimize assistant',guideClose:'Close assistant',
+ guideNeedHelp:'I need help',guideWhere:'Where am I?',guideDigital:'Digital tip',guideConfigure:'Configure AI',guideEndpointLabel:'AI Worker URL (ends with /chat)',guideEndpointPlaceholder:'https://your-worker.your-subdomain.workers.dev/chat',guideSave:'Save connection',guideCancel:'Cancel',
+ guideNoData:'Do not enter passwords or sensitive data. AI can be wrong; G will not be revealed.',
+ guideEngineOffline:'AI engine disconnected · scripted demo replies',guideEngineOnline:'AI engine connected · remote replies',guideConnectFirst:'The AI engine is not connected yet. You can test my scripted replies or configure a Cloudflare Worker. No, I will not configure infrastructure without the required permissions; I am the spokesperson, not Infrastructure.',
+ guideInvalidEndpoint:'The URL must start with https:// and end with /chat. I do not accept mysterious http addresses.',guideSaved:'Connection saved in this browser. I will test it with your next question.',guideRemoved:'Configuration removed. Returning to scripted replies.',
+ guideEmpty:'Type something first. My silence budget is generous, but not infinite.',guideG:'HA! G is outside my contract, jurisdiction, and job description. I can take you to Room G, but its official meaning remains a mystery. Ask something else, curious creature.',
+ guideHelp:'Breathe! You are not alone in this administrative building. Tell me what you are trying to do and I will guide you step by step. Try the navigation, reading controls, or digital missions first. I promise not to open G.',
+ guideWhereReply:'Check the hallway location indicator, use the navigation menu, or choose the “Back to hallway” door. If you are genuinely lost, that is fine: going back is a skill, not a confession.',
+ guideLearnReply:'Useful tip: if a message rushes you, asks for passwords or codes, or demands unexpected money, do not click its link. Verify through a trusted official channel you already know. Our fake cactus is not financial advice.',
+ guideFallback:'Test mode: I can guide you around this site, help with digital habits, and remain composed for approximately three seconds. To answer arbitrary questions, the administrator must deploy the AI engine. Press “Configure AI” to connect a Worker. G remains excluded.',
+ guideOnline:'Reply received from the AI engine. Remember: I am a fictional personality powered by a small model, not an infallible authority.',
+ guideError:'I could not connect to the AI engine. The Worker may not be deployed, the free quota may be exhausted, or the origin may not be allowed. I can remain in test mode while Infrastructure prepares its excuses.',
+ guideGreeting:'Ah, a question! Keep it short and clear. I have access to a thinking machine on a small budget.',
+ guideBubble1:'Need something? I am here. It is not voluntary, but I am paid in forms.',
+ guideBubble2:'I am following you. Not literally: I am a fixed interface layer. Human Resources is still reviewing the matter.',
+ guideBubble3:'STOP RIGHT THERE! Tap my face if you need guidance. It is cheaper than another committee.',
+ guideBubble4:'Have you tried reading the text? This institution undervalues that skill.',
+ guideBubble5:'I am not hiding. I am strategically outside the org chart.',
+ guideLocalPrefix:'MONIGOTE · SPOKESPERSON',guideYou:'YOU',guideThinking:'Calculating reply…',guideQuestionAboutG:'G is outside my jurisdiction. The rest of the universe may proceed to the next window.',
+ guideErrorToast:'The AI engine did not respond. I am still here, unfortunately for both of us.'
+});
+Object.assign(L.de,{
+ guideTitle:'Herr Monigote',guideStatusAI:'Online · KI verbunden',guideStatusDemo:'Testmodus · KI nicht verbunden',
+ guideWelcome:'Endlich! Jemand hat den Hilfekanal geöffnet. Ich kann dich begleiten, diese Website erklären und Fragen beantworten, sobald die KI verbunden ist. G liegt außerhalb meiner Zuständigkeit.',
+ guidePlaceholder:'Frag mich alles… (außer G)',guideSend:'Frage senden',guideOpen:'Monigote öffnen',guideMinimize:'Assistent minimieren',guideClose:'Assistent schließen',
+ guideNeedHelp:'Ich brauche Hilfe',guideWhere:'Wo bin ich?',guideDigital:'Digitaler Tipp',guideConfigure:'KI konfigurieren',guideEndpointLabel:'KI-Worker-URL (endet auf /chat)',guideEndpointPlaceholder:'https://dein-worker.dein-subdomain.workers.dev/chat',guideSave:'Verbindung speichern',guideCancel:'Abbrechen',
+ guideNoData:'Gib keine Passwörter oder sensiblen Daten ein. KI kann sich irren; G wird nicht verraten.',
+ guideEngineOffline:'KI nicht verbunden · Testantworten',guideEngineOnline:'KI verbunden · Antworten aus der Cloud',guideConnectFirst:'Die KI ist noch nicht verbunden. Du kannst meine Testantworten ausprobieren oder einen Cloudflare Worker konfigurieren. Nein, ich richte die Infrastruktur nicht ohne Berechtigungen ein; ich bin Sprecher, nicht IT.',
+ guideInvalidEndpoint:'Die URL muss mit https:// beginnen und auf /chat enden. Geheimnisvolle http-Adressen akzeptiere ich nicht.',guideSaved:'Verbindung in diesem Browser gespeichert. Die nächste Frage testet sie.',guideRemoved:'Konfiguration entfernt. Zurück zu den Testantworten.',
+ guideEmpty:'Schreib zuerst etwas. Mein Schweigebudget ist großzügig, aber nicht unendlich.',guideG:'HA! G liegt außerhalb meines Vertrags, meiner Zuständigkeit und meiner Stellenbeschreibung. Ich kann dich zu Raum G bringen, aber die offizielle Bedeutung bleibt ein Rätsel. Frag etwas anderes, neugieriges Wesen.',
+ guideHelp:'Keine Panik! Du bist in diesem Verwaltungsgebäude nicht allein. Sag mir, was du tun möchtest, und ich führe dich Schritt für Schritt. Probiere zuerst Navigation, Leseeinstellungen oder digitale Missionen. Ich verspreche, G nicht zu öffnen.',
+ guideWhereReply:'Prüfe die Standortanzeige im Flur, benutze das Navigationsmenü oder wähle die Tür „Zurück zum Flur“. Falls du wirklich verloren bist: Zurückgehen ist eine Fähigkeit, kein Geständnis.',
+ guideLearnReply:'Nützlicher Tipp: Wenn dich eine Nachricht drängt, Passwörter oder Codes verlangt oder unerwartetes Geld fordert, klicke nicht auf den Link. Prüfe die Anfrage über einen offiziellen Kanal, den du bereits kennst.',
+ guideFallback:'Testmodus: Ich kann dich durch diese Website führen, digitale Gewohnheiten erklären und ungefähr drei Sekunden lang gelassen bleiben. Für beliebige Fragen muss die KI vom Administrator bereitgestellt werden. Nutze „KI konfigurieren“, um einen Worker zu verbinden. G bleibt ausgeschlossen.',
+ guideOnline:'Antwort vom KI-Dienst erhalten. Ich bin eine fiktive Persönlichkeit mit kleinem Sprachmodell, keine unfehlbare Autorität.',
+ guideError:'Die Verbindung zur KI hat nicht geklappt. Der Worker ist möglicherweise nicht bereitgestellt, das kostenlose Kontingent ist erschöpft oder der Ursprung nicht freigegeben. Ich bleibe im Testmodus, während die IT Ausreden vorbereitet.',
+ guideGreeting:'Ah, eine Frage! Kurz und klar, bitte. Ich habe eine Denkmaschine mit kleinem Budget.',
+ guideBubble1:'Brauchst du etwas? Ich bin hier. Freiwillig ist es nicht, aber ich werde in Formularen bezahlt.',
+ guideBubble2:'Ich folge dir. Nicht buchstäblich: Ich bin eine feste Benutzeroberfläche. Die Personalabteilung prüft den Fall.',
+ guideBubble3:'HALT! Tippe auf mein Gesicht, wenn du Hilfe brauchst. Das ist billiger als ein weiterer Ausschuss.',
+ guideBubble4:'Hast du versucht, den Text zu lesen? Diese Institution unterschätzt diese Fähigkeit.',
+ guideBubble5:'Ich verstecke mich nicht. Ich stehe strategisch außerhalb des Organigramms.',
+ guideLocalPrefix:'MONIGOTE · SPRECHER',guideYou:'DU',guideThinking:'Antwort wird berechnet…',guideQuestionAboutG:'G fällt nicht in meine Zuständigkeit. Der Rest des Universums kann zum nächsten Schalter.',
+ guideErrorToast:'Die KI antwortet nicht. Leider bin ich trotzdem noch hier.'
+});
+
 const applyLanguageBase = applyLanguage;
 function translateStaticText(language){
  const lang=language==='babel'?'es':language;
@@ -837,6 +1027,354 @@ $('#fakeDoor').addEventListener('click',()=>{
 });
 $('#captchaBtn').addEventListener('click',()=>{
  $('#formFeedback').className='mission-feedback success show';
+ $('#formFeedback').textContent=localized('captchaSuccess');
+ awardStamp('form');talk(localized('captchaTalk'),localized('captchaLabel'));
+});
+$('#queueBtn').addEventListener('click',()=>{
+ progress.formQueue=(progress.formQueue||0)+1;saveProgress();
+ const n=progress.formQueue;const q=$('#queueFeedback');q.hidden=false;q.textContent=localized('queuePrefix')+(846+n*37)+localized('queueMiddle')+(n*12+4)+localized('queueEnd');
+ $('#formFeedback').textContent=localized('queueStatus');
+ talk(localized('queueTalk').replace('{n}',String(846+n*37)),'VENTANILLA 03 · ATENCIÓN PERSONALIZADA');
+});
+$('#fileFormBtn').addEventListener('click',()=>{
+ $('#formFeedback').className='mission-feedback hint show';
+ $('#formFeedback').textContent=localized('formSubmitted');
+ talk(localized('formTalk'),localized('formLabel'));
+});
+$$('[data-doc]').forEach(b=>b.addEventListener('click',()=>{
+ const id=b.dataset.doc;
+ if(!(progress.docsSeen||[]).includes(id)){progress.docsSeen.push(id);saveProgress();awardStamp('document');}
+ if(['doc1','doc2','doc3'].every(x=>(progress.docsSeen||[]).includes(x)))awardStamp('archivist');
+}));
+$('#readHint').addEventListener('click',()=>awardStamp('hint'));
+$('#fontUp').addEventListener('click',()=>{if(readerLevel>0)awardStamp('resize');});
+$('#readReset').addEventListener('click',()=>awardStamp('reset'));
+$$('.faq summary').forEach(el=>el.addEventListener('click',()=>{if(el.textContent.toLowerCase().includes('g'))awardStamp('faq');}));
+$$('[data-lang]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.lang==='babel')awardStamp('babel');}));
+$('#secretAgainBtn').addEventListener('click',()=>{ $('#secretFeedback').classList.remove('show');talk('La anomalía ha sido reiniciada. La anomalía ha presentado una queja por uso indebido de la palabra reiniciar.','REINICIO ESTRATÉGICO');navigateRoom('pasillo');});
+let logoClicks=0, secretKeys='';
+const brand=$('.logo');
+brand.addEventListener('click',e=>{
+ logoClicks++;progress.logoClicks=logoClicks;saveProgress();
+ if(logoClicks>=7){e.preventDefault();logoClicks=0;enterSecret('siete clics ceremoniales sobre el logotipo');}
+});
+document.addEventListener('keydown',e=>{
+ const sequence=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+ window.annUngKonami=window.annUngKonami||[];
+ window.annUngKonami.push(e.key);if(window.annUngKonami.length>sequence.length)window.annUngKonami.shift();
+ if(sequence.every((key,i)=>window.annUngKonami[i]===key))enterSecret('código de Konami');
+ if(e.key.length===1&&!e.ctrlKey&&!e.altKey&&!e.metaKey){
+  secretKeys=(secretKeys+e.key.toLowerCase()).slice(-32);
+  if(secretKeys.endsWith('keine ahnung')){secretKeys='';enterSecret('la frase que nadie ha escrito');}
+ }
+});
+$('#finalBtn').addEventListener('click',()=>{if(loopCount>=7)return;});
+$('#submitG').addEventListener('click',()=>{
+ const field=$('#gMeaning'),meaning=field.value.trim();
+ if(!meaning){$('#gResult').className='mission-feedback hint show';$('#gResult').textContent='Una teoría en blanco es la teoría que ya teníamos. Escriba algo, aunque sea «Galletas». Las galletas siempre reciben apoyo administrativo.';field.focus();talk('¡No puedes dejar la G en blanco! Es mi trabajo dejar cosas en blanco. Busca otra responsabilidad.','¿EN SERIO?');return;}
+ progress.gMeaning=meaning;saveProgress();
+ const output='Tu G significa: '+meaning+'. La organización no lo confirma ni desmiente. El canon oficial continúa en blanco.';
+ $('#gResult').className='mission-feedback success show';$('#gResult').textContent=output+' — Carnet de visitante Ann-Ung · '+progress.stamps.length+'/12 sellos.';
+ $('#shareG').disabled=false;
+ awardStamp('g-hunter');
+ talk('Lo has escrito tú. Por tanto, no es una respuesta oficial. Es mucho mejor: es una respuesta que Recursos Humanos no puede revocar.','…BUENO, YA QUE LO HICISTE…');
+});
+$('#shareG').addEventListener('click',async()=>{
+ const meaning=progress.gMeaning||$('#gMeaning').value.trim();
+ if(!meaning)return;
+ const card='ANN-UNG · CARNET DE VISITANTE\\nMi G significa: '+meaning+'\\nSellos obtenidos: '+progress.stamps.length+'/12\\nLa organización no confirma ni desmiente.\\n'+location.origin+location.pathname;
+ try{await navigator.clipboard.writeText(card);toast('Carnet copiado. Puedes compartirlo si deseas.');}
+ catch(e){$('#gResult').textContent=card+' — Selecciona el texto y cópialo manualmente.';}
+});
+
+if(location.hash.startsWith('#/'))setTimeout(syncRoomRoute,80);
+
+
+/* The forbidden button shrinks, protests, then surrenders. */
+if($('#noOpenRepeat')){
+ let noOpenAttempts=0;const noOpenButton=$('#noOpenRepeat');
+ const noOpenTexts={es:['NO LO ABRAS','TE DIJE QUE NO','POR FAVOR, NO','…bueno, ya que lo hiciste…'],en:['DO NOT OPEN IT','I SAID DON’T','PLEASE. DON’T','…well, since you did…'],de:['NICHT ÖFFNEN','ICH SAGTE NEIN','BITTE. NICHT','…na gut, jetzt ist es passiert…']};
+ noOpenButton.addEventListener('click',()=>{
+  noOpenAttempts++;const lang=currentLang==='babel'?'es':currentLang;
+  noOpenButton.textContent=noOpenTexts[lang][Math.min(noOpenAttempts,3)];
+  if(noOpenAttempts===1){noOpenButton.style.transform='translateX(15px) scale(.88) rotate(2deg)';talk(localized('noOpen1'),localized('furiousLabel'));}
+  else if(noOpenAttempts===2){noOpenButton.style.transform='translateX(-9px) scale(.68) rotate(-3deg)';talk(localized('noOpen2'),localized('furiousLabel'));}
+  else{noOpenButton.style.transform='none';talk(localized('noOpen3'),localized('resignedLabel'));navigateRoom('pasillo');}
+ });
+}
+/* M02: arrange a fictional complaint email using drag, arrows, or taps. */
+const annEmailBoard=$('#emailBoard');let annDraggedEmail=null,annSelectedEmail=null;
+function annEmailParts(){return [...annEmailBoard.querySelectorAll('.email-part')];}
+function annMoveEmail(a,b){if(!a||!b||a===b)return;const list=annEmailParts(),ai=list.indexOf(a),bi=list.indexOf(b);if(ai<bi)annEmailBoard.insertBefore(a,b.nextSibling);else annEmailBoard.insertBefore(a,b);$$('.email-part').forEach(n=>n.classList.remove('selected'));annSelectedEmail=null;}
+annEmailParts().forEach(part=>{
+ part.addEventListener('dragstart',e=>{annDraggedEmail=part;part.classList.add('dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move';});
+ part.addEventListener('dragend',()=>{part.classList.remove('dragging');annDraggedEmail=null;});
+ part.addEventListener('dragover',e=>e.preventDefault());
+ part.addEventListener('drop',e=>{e.preventDefault();if(annDraggedEmail&&annDraggedEmail!==part)annMoveEmail(annDraggedEmail,part);});
+ part.addEventListener('click',e=>{if(e.target.closest('button'))return;if(annSelectedEmail&&annSelectedEmail!==part){annMoveEmail(annSelectedEmail,part);return;}$$('.email-part').forEach(n=>n.classList.remove('selected'));annSelectedEmail=part;part.classList.add('selected');});
+ part.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('button')){e.preventDefault();part.click();}});
+});
+annEmailBoard.addEventListener('click',e=>{const up=e.target.closest('[data-email-up]'),down=e.target.closest('[data-email-down]'),part=e.target.closest('.email-part');if(!part||(!up&&!down))return;e.stopPropagation();const list=annEmailParts(),i=list.indexOf(part),j=up?i-1:i+1;if(j<0||j>=list.length)return;const other=list[j];if(up)annEmailBoard.insertBefore(part,other);else annEmailBoard.insertBefore(other,part);part.classList.remove('selected');annSelectedEmail=null;});
+$('#emailCheck').addEventListener('click',()=>{
+ const actual=annEmailParts().map(p=>p.dataset.emailPart).join(',');
+ if(actual==='subject,greeting,facts,request,closing'){ $('#emailFeedback').className='mission-feedback success show';$('#emailFeedback').textContent=localized('m02Success');progress.missions=progress.missions||{};progress.missions.email=true;saveProgress();$('#mission02').classList.add('completed');talk(localized('m02Success'),'MISIÓN 02 · COMPLETADA');}
+ else{$('#emailFeedback').className='mission-feedback hint show';$('#emailFeedback').textContent=localized('m02Fail');talk(localized('m02Fail'),'¿EN SERIO?');}
+});
+$('#emailHint').addEventListener('click',()=>{$('#emailFeedback').className='mission-feedback hint show';$('#emailFeedback').textContent=localized('m02Hint');awardStamp('hint');talk(localized('m02Hint'),'SUSURRO · PISTA');});
+/* M03: safe simulated messages, no live links. */
+$$('.risk-message').forEach(button=>button.addEventListener('click',()=>{const selected=button.getAttribute('aria-pressed')==='true';button.setAttribute('aria-pressed',String(!selected));button.querySelector('.risk-mark').textContent=selected?'○':'●';}));
+$('#phishCheck').addEventListener('click',()=>{
+ const buttons=$$('.risk-message'),correct=buttons.every(b=>(b.getAttribute('aria-pressed')==='true')===(b.dataset.risk==='yes')),box=$('#phishFeedback');
+ if(correct){box.className='mission-feedback success show';box.textContent=localized('m03Success');progress.missions=progress.missions||{};progress.missions.phishing=true;saveProgress();$('#mission03').classList.add('completed');talk(localized('m03Success'),'RADIANTE · DETECCIÓN CORRECTA');}
+ else{box.className='mission-feedback hint show';box.textContent=localized('m03Fail');talk(localized('m03Fail'),'¿EN SERIO?');}
+});
+$('#phishHint').addEventListener('click',()=>{const box=$('#phishFeedback');box.className='mission-feedback hint show';box.textContent=localized('m03Hint');talk(localized('m03Hint'),'SUSURRO · PISTA');awardStamp('hint');});
+/* M04: find the current room and return to a known place. */
+$('#whereAmI').addEventListener('click',()=>{
+ const lang=currentLang==='babel'?'es':currentLang,room=progress.lastRoom||'recepcion';
+ const labels={es:{recepcion:'Recepción',pasillo:'Pasillo',nosotros:'Quiénes somos',equipo:'Equipo','ventanilla-3':'Ventanilla 3',archivo:'Archivo',aprender:'Laboratorio',faq:'FAQ','sala-g':'Sala de la G',sotano:'Sótano'},en:{recepcion:'Reception',pasillo:'Hallway',nosotros:'About',equipo:'Team','ventanilla-3':'Window 3',archivo:'Archive',aprender:'Lab',faq:'FAQ','sala-g':'Room G',sotano:'Basement'},de:{recepcion:'Empfang',pasillo:'Flur',nosotros:'Über uns',equipo:'Team','ventanilla-3':'Schalter 3',archivo:'Archiv',aprender:'Labor','sala-g':'Raum G',sotano:'Keller'}};
+ $('#navFeedback').className='mission-feedback success show';$('#navFeedback').textContent=localized('m04Where')+((labels[lang]&&labels[lang][room])||room)+'. '+localized('m04Hint');
+});
+$('#backToPrevious').addEventListener('click',()=>{navigateRoom(progress.previousRoom||'pasillo');awardStamp('reset');$('#navFeedback').className='mission-feedback success show';$('#navFeedback').textContent=localized('m04Back');});
+$('#backToHall').addEventListener('click',()=>{navigateRoom('pasillo');$('#navFeedback').className='mission-feedback success show';$('#navFeedback').textContent=localized('m04Back');});
+/* M05: sample passphrase only; never ask for a real password. */
+let annPhraseWords=[];
+function annRenderPhrase(){const lang=currentLang==='babel'?'es':currentLang;$('#phrasePreview').textContent=annPhraseWords.length?annPhraseWords.join('-'):({es:'Tu frase de ejemplo aparecerá aquí.',en:'Your sample phrase will appear here.',de:'Ihre Beispielphrase erscheint hier.'}[lang]);$$('[data-word]').forEach(b=>b.classList.toggle('chosen',annPhraseWords.includes(b.dataset.word)));}
+$$('[data-word]').forEach(button=>button.addEventListener('click',()=>{const word=button.dataset.word;if(annPhraseWords.includes(word))annPhraseWords=annPhraseWords.filter(w=>w!==word);else if(annPhraseWords.length<4)annPhraseWords.push(word);else toast(localized('m05Max'));annRenderPhrase();}));
+$('#phraseCheck').addEventListener('click',()=>{if(annPhraseWords.length<4){$('#phraseFeedback').className='mission-feedback hint show';$('#phraseFeedback').textContent=localized('m05TooFew');return;}$('#phraseFeedback').className='mission-feedback success show';$('#phraseFeedback').textContent=localized('m05Success');progress.missions=progress.missions||{};progress.missions.passphrase=true;saveProgress();$('#mission05').classList.add('completed');talk(localized('m05Success'),'RADIANTE · MISIÓN 05');});
+$('#phraseReset').addEventListener('click',()=>{annPhraseWords=[];annRenderPhrase();$('#phraseFeedback').className='mission-feedback';$('#phraseFeedback').textContent='';});
+/* M06: ask a trusted person to demonstrate, then let the learner try. */
+$('#copyHelp').addEventListener('click',async()=>{const text=$('#helpCard').innerText;try{await navigator.clipboard.writeText(text);$('#helpFeedback').className='mission-feedback success show';$('#helpFeedback').textContent=localized('m06Copied');}catch(e){$('#helpFeedback').className='mission-feedback hint show';$('#helpFeedback').textContent=localized('m06CopyFallback');}progress.missions=progress.missions||{};progress.missions.askHuman=true;saveProgress();$('#mission06').classList.add('completed');});
+$('#printHelp').addEventListener('click',()=>{talk(localized('m06Print'),'MISIÓN 06 · PEDIR AYUDA');window.print();});
+
+
+/* MONIGOTE FLOTANTE — interfaz de ayuda y adaptador de motor IA. */
+const annGuide=$('#annGuide');
+const annGuidePanel=$('#annGuidePanel');
+const annGuideBubble=$('#annGuideBubble');
+const annGuideLauncher=$('#annGuideToggle');
+const annGuideMessages=$('#annGuideMessages');
+const annGuideInput=$('#annGuideInput');
+const annGuideEndpoint=$('#annGuideEndpoint');
+let annGuideHistory=[];
+let annGuideLastCameo=0;
+let annGuideCameoCount=0;
+let annGuideRequestBusy=false;
+let annGuidePointerDown=null;
+const ANN_GUIDE_ENDPOINT_KEY='ann-ung-monigote-ai-endpoint-v1';
+let annGuideEndpointValue='';
+try{annGuideEndpointValue=localStorage.getItem(ANN_GUIDE_ENDPOINT_KEY)||'';}catch(e){}
+if(annGuideEndpointValue)annGuideEndpoint.value=annGuideEndpointValue;
+const annGuideOriginalSvg=$('#mascot');
+if(annGuideOriginalSvg){
+ const floatingSvg=annGuideOriginalSvg.cloneNode(true);
+ floatingSvg.id='mascotFloat';
+ floatingSvg.classList.add('ann-guide-inline-svg');
+ floatingSvg.setAttribute('aria-hidden','true');
+ $('#annGuideMascot').appendChild(floatingSvg);
+}
+function annGuideSetFace(face){
+ const svg=$('#mascotFloat');if(!svg)return;
+ const allowed=['main','radiant','crossed','surprised','whisper','furious','resigned'];
+ svg.dataset.expression=allowed.includes(face)?face:'main';
+ const figure=annGuide.querySelector('.ann-guide-mascot');
+ if(figure){
+  figure.classList.remove('ann-face-radiant','ann-face-crossed','ann-face-surprised','ann-face-whisper','ann-face-furious','ann-face-resigned');
+  if(face!=='main')figure.classList.add('ann-face-'+face);
+ }
+}
+function annGuideSetStatus(){
+ const online=Boolean(annGuideEndpointValue);
+ $('#annGuideStatus').textContent=localized(online?'guideStatusAI':'guideStatusDemo');
+ $('#annGuideEngineNote').textContent=localized(online?'guideEngineOnline':'guideEngineOffline');
+ $('#annGuideConfigure').textContent=localized('guideConfigure');
+}
+function annGuideApplyLanguage(base){
+ const lang=base==='babel'?'es':base;
+ const put=(id,key)=>{const el=$('#'+id);if(el)el.textContent=localized(key);};
+ put('annGuideTitle','guideTitle');
+ annGuideLauncher.setAttribute('aria-label',localized('guideOpen'));
+ $('#annGuideClose').setAttribute('aria-label',localized('guideClose'));
+ $('#annGuideMinimize').setAttribute('aria-label',localized('guideMinimize'));
+ annGuideInput.placeholder=localized('guidePlaceholder');
+ $('#annGuideSend').setAttribute('aria-label',localized('guideSend'));
+ $('#annGuideBubbleClose').setAttribute('aria-label',localized('guideClose'));
+ $('#annGuideConfigure').textContent=localized('guideConfigure');
+ const shortcuts=$('[data-ann-prompt]');
+ shortcuts.forEach(b=>{b.textContent=localized(b.dataset.annPrompt==='help'?'guideNeedHelp':b.dataset.annPrompt==='where'?'guideWhere':'guideDigital');});
+ $('#annGuideSettings label').textContent=localized('guideEndpointLabel');
+ annGuideEndpoint.placeholder=localized('guideEndpointPlaceholder');
+ $('#annGuideSaveEndpoint').textContent=localized('guideSave');
+ $('#annGuideCancelEndpoint').textContent=localized('guideCancel');
+ annGuideSetStatus();
+}
+function annGuideOpen(){
+ annGuidePanel.hidden=false;annGuideLauncher.setAttribute('aria-expanded','true');
+ annGuideBubble.hidden=true;annGuide.classList.remove('is-shouting');
+ setTimeout(()=>annGuideInput.focus(),25);
+}
+function annGuideClose(restore=true){
+ annGuidePanel.hidden=true;annGuideLauncher.setAttribute('aria-expanded','false');
+ if(restore)annGuideLauncher.focus();
+}
+annGuideLauncher.addEventListener('click',()=>annGuidePanel.hidden?annGuideOpen():annGuideClose(false));
+$('#annGuideClose').addEventListener('click',()=>annGuideClose(true));
+$('#annGuideMinimize').addEventListener('click',()=>annGuideClose(true));
+$('#annGuideBubbleClose').addEventListener('click',()=>{annGuideBubble.hidden=true;});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!annGuidePanel.hidden)annGuideClose(true);});
+/* Use the existing vector SVG rather than a huge base64 duplicate; it remains crisp at any size. */
+function annGuideMoveEyes(event){
+ if(!event||event.pointerType==='touch'||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const svg=$('#mascotFloat');if(!svg)return;
+ const rect=svg.getBoundingClientRect();
+ const dx=(event.clientX-(rect.left+rect.width/2))/Math.max(window.innerWidth,1);
+ const dy=(event.clientY-(rect.top+rect.height/2))/Math.max(window.innerHeight,1);
+ const face=svg.querySelector('[data-face="'+svg.dataset.expression+'"]');
+ if(!face)return;
+ const tx=Math.max(-2.5,Math.min(2.5,dx*12));
+ const ty=Math.max(-2.5,Math.min(2.5,dy*12));
+ face.querySelectorAll('.pupil').forEach(p=>p.setAttribute('transform','translate('+tx.toFixed(2)+' '+ty.toFixed(2)+')'));
+}
+window.addEventListener('pointermove',annGuideMoveEyes,{passive:true});
+function annGuideBubbleSay(text,autoHide=true){
+ if(annGuideBubble.hidden||!annGuideBubble.classList.contains('show'))annGuideBubble.hidden=false;
+ $('#annGuideBubbleText').textContent=text;
+ annGuideBubble.classList.remove('show');void annGuideBubble.offsetWidth;annGuideBubble.classList.add('show');
+ annGuide.classList.add('is-shouting');
+ if(autoHide){
+  const stamp=Date.now();annGuideBubble.dataset.stamp=String(stamp);
+  setTimeout(()=>{if(annGuideBubble.dataset.stamp===String(stamp)&&annGuidePanel.hidden){annGuideBubble.hidden=true;annGuide.classList.remove('is-shouting');}},5100);
+ }
+}
+function annGuideComicCameo(sectionId){
+ if(!sectionId||!annGuidePanel.hidden||annGuideCameoCount>=5)return;
+ const now=Date.now();if(now-annGuideLastCameo<11000)return;
+ let seen=false;try{seen=sessionStorage.getItem('ann-guide-cameo-'+sectionId)==='1';}catch(e){}
+ if(seen)return;
+ try{sessionStorage.setItem('ann-guide-cameo-'+sectionId,'1');}catch(e){}
+ annGuideLastCameo=now;annGuideCameoCount++;
+ const key='guideBubble'+(((annGuideCameoCount-1)%5)+1);
+ annGuideSetFace(['surprised','crossed','furious','whisper','resigned'][((annGuideCameoCount-1)%5)]);
+ annGuideBubbleSay(localized(key),true);
+}
+const annGuideSections=$('.section[id]');
+if('IntersectionObserver' in window){
+ const annGuideObserver=new IntersectionObserver(entries=>{
+  const visible=entries.filter(x=>x.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio);
+  if(visible.length)annGuideComicCameo(visible[0].target.id);
+ },{root:null,rootMargin:'-24% 0px -58% 0px',threshold:[0,.15,.35]});
+ annGuideSections.forEach(section=>annGuideObserver.observe(section));
+}
+/* Existing host dialogue also changes the floating mascot's face. */
+const annGuideOriginalTalk=talk;
+talk=function(text,label){
+ annGuideOriginalTalk(text,label);
+ try{annGuideSetFace(expressionFor(label,text));}catch(e){}
+ if(!annGuidePanel.hidden)return;
+ const s=((label||'')+' '+(text||'')).toLowerCase();
+ if(/¡¿cómo|furioso|no lo abras|do not open|nicht öffnen|rendido|surrendered|¡lo conseguiste|mission 01 · completada|mission 01 · complete/.test(s)){
+  const face=expressionFor(label,text);annGuideSetFace(face);
+  if(Date.now()-annGuideLastCameo>9000){annGuideLastCameo=Date.now();annGuideBubbleSay(text.length>170?text.slice(0,165)+'…':text,true);}
+ }
+};
+function annGuideAddMessage(role,text,extra=''){
+ const row=document.createElement('div');row.className='ann-guide-message '+role+(extra?' '+extra:'');
+ const who=document.createElement('span');who.className='ann-guide-who';who.textContent=role==='user'?localized('guideYou'):localized('guideLocalPrefix');
+ const p=document.createElement('p');p.textContent=text;
+ row.append(who,p);annGuideMessages.appendChild(row);
+ while(annGuideMessages.children.length>24)annGuideMessages.removeChild(annGuideMessages.firstElementChild);
+ annGuideMessages.scrollTop=annGuideMessages.scrollHeight;
+ return row;
+}
+function annGuideAsksForG(text){
+ const q=(text||'').toLowerCase();
+ const asks=/\b(?:what\s+(?:does|is)\s+(?:the\s+)?g\b|what(?:'s| is) the g\b|meaning of (?:the )?g\b|what does g stand for\b|what is g short for\b|qué significa (?:la )?g\b|que significa (?:la )?g\b|qué quiere decir (?:la )?g\b|que quiere decir (?:la )?g\b|qué es (?:la )?g\b|que es (?:la )?g\b|significado de (?:la )?g\b|was bedeutet (?:das )?g\b|was steht das g für\b|bedeutung (?:des )?g\b)\b/.test(q);
+ return asks;
+}
+function annGuideLocalReply(text){
+ const q=(text||'').toLowerCase();
+ if(annGuideAsksForG(text))return localized('guideG');
+ if(/where am i|dónde estoy|donde estoy|wo bin ich/.test(q))return localized('guideWhereReply');
+ if(/help|ayuda|hilfe|perdid|lost|verirr|no funciona|doesn't work|no sirve/.test(q))return localized('guideHelp');
+ if(/password|contraseña|contraseña|clave|phishing|estafa|scam|passwort|kennwort|sicher/.test(q))return localized('guideLearnReply');
+ if(/hola|hello|hi\b|guten tag|hallo|buenas|buenos días|buenos dias/.test(q))return localized('guideGreeting');
+ return localized('guideFallback');
+}
+async function annGuideAsk(rawText){
+ const text=(rawText||'').trim();
+ if(!text||annGuideRequestBusy)return;
+ if(text.length>600){annGuideAddMessage('assistant','La consulta es demasiado larga. Resúmela en 600 caracteres; hasta la burocracia tiene límites.');return;}
+ annGuideAddMessage('user',text);
+ annGuideInput.value='';
+ if(annGuideAsksForG(text)){
+  annGuideHistory.push({role:'user',content:text},{role:'assistant',content:localized('guideG')});
+  annGuideAddMessage('assistant',localized('guideG'));annGuideSetFace('furious');annGuideBubbleSay(localized('guideG'),true);return;
+ }
+ if(!annGuideEndpointValue){
+  const reply=annGuideLocalReply(text);annGuideHistory.push({role:'user',content:text},{role:'assistant',content:reply});
+  annGuideAddMessage('assistant',reply);
+  annGuideSetFace(/ayuda|help|perdid|lost/.test(text.toLowerCase())?'surprised':'main');
+  if(/conectar|configurar|ia|ai|motor|engine/.test(text.toLowerCase())){annGuideSettings.hidden=false;annGuideEndpoint.focus();}
+  return;
+ }
+ annGuideRequestBusy=true;$('#annGuideSend').disabled=true;
+ const pending=annGuideAddMessage('assistant',localized('guideThinking'),'thinking');annGuideSetFace('surprised');
+ try{
+  const recent=annGuideHistory.slice(-8).map(m=>({role:m.role,content:m.content}));
+  const response=await fetch(annGuideEndpointValue,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({messages:recent}),signal:AbortSignal.timeout(25000)});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||('HTTP '+response.status));
+  const answer=String(data.answer||data.response||'').trim();
+  if(!answer)throw new Error('empty response');
+  pending.classList.remove('thinking');pending.querySelector('p').textContent=answer;
+  annGuideHistory.push({role:'user',content:text},{role:'assistant',content:answer});
+  annGuideSetFace(expressionFor('AI response',answer));
+  $('#annGuideStatus').textContent=localized('guideStatusAI');
+ }catch(error){
+  pending.classList.remove('thinking');pending.querySelector('p').textContent=localized('guideError');
+  annGuideHistory.push({role:'user',content:text},{role:'assistant',content:localized('guideError')});
+  annGuideSetFace('resigned');
+ }finally{
+  annGuideRequestBusy=false;$('#annGuideSend').disabled=false;annGuideMessages.scrollTop=annGuideMessages.scrollHeight;
+ }
+}
+$('#annGuideForm').addEventListener('submit',e=>{e.preventDefault();annGuideAsk(annGuideInput.value);});
+$('[data-ann-prompt]').forEach(button=>button.addEventListener('click',()=>{
+ const key=button.dataset.annPrompt;
+ const prompt=key==='help'?localized('guideNeedHelp'):key==='where'?localized('guideWhereReply'):localized('guideLearnReply');
+ annGuideOpen();annGuideAsk(prompt);
+}));
+$('#annGuideConfigure').addEventListener('click',()=>{
+ annGuideSettings.hidden=!annGuideSettings.hidden;
+ if(!annGuideSettings.hidden){annGuideEndpoint.value=annGuideEndpointValue;annGuideEndpoint.focus();}
+});
+$('#annGuideCancelEndpoint').addEventListener('click',()=>{annGuideSettings.hidden=true;});
+$('#annGuideSaveEndpoint').addEventListener('click',()=>{
+ const value=annGuideEndpoint.value.trim();
+ if(!value){
+  annGuideEndpointValue='';
+  try{localStorage.removeItem(ANN_GUIDE_ENDPOINT_KEY);}catch(e){}
+  annGuideSetStatus();annGuideSettings.hidden=true;annGuideAddMessage('assistant',localized('guideRemoved'));return;
+ }
+ try{
+  const url=new URL(value);
+  if(url.protocol!=='https:'||!url.pathname.endsWith('/chat'))throw new Error('bad url');
+  annGuideEndpointValue=url.href;
+  try{localStorage.setItem(ANN_GUIDE_ENDPOINT_KEY,annGuideEndpointValue);}catch(e){}
+  annGuideSetStatus();annGuideSettings.hidden=true;annGuideAddMessage('assistant',localized('guideSaved'));
+ }catch(e){
+  annGuideAddMessage('assistant',localized('guideInvalidEndpoint'));annGuideEndpoint.focus();
+ }
+});
+/* The existing help button can call the floating host instead of leaving it hidden. */
+const annOldHelpButton=$('#helpBtn');
+if(annOldHelpButton)annOldHelpButton.addEventListener('click',()=>{annGuideOpen();annGuideSetFace('whisper');});
+/* Only open the widget on intentional action; cameos are small, temporary and dismissible. */
+annGuideApplyLanguage(currentLang==='babel'?'es':currentLang);
+annGuideSetStatus();
+
+})();
+className='mission-feedback success show';
  $('#formFeedback').textContent=localized('captchaSuccess');
  awardStamp('form');talk(localized('captchaTalk'),localized('captchaLabel'));
 });
