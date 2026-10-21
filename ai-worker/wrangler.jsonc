@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ann-ung-monigote-ai",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": true,
+  "ai": { "binding": "AI" },
+  "ratelimits": [
+    {
+      "name": "MONIGOTE_LIMITER",
+      "namespace_id": "8291042",
+      "simple": { "limit": 8, "period": 60 }
+    }
+  ]
+}
