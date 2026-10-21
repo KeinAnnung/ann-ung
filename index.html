@@ -740,6 +740,13 @@ applyLanguage('es');
 progress.visits=(progress.visits||0)+1;saveProgress();
 if(progress.visits>=3)awardStamp('regular');
 renderPassport();
+/* El anfitrión recuerda, aunque preferiría fingir que no. */
+loopCount=progress.gAttempts||0;
+if(loopCount>0)$('#loopCount').textContent=localized('imminencePrefix')+loopCount;
+if(loopCount>=7){
+ $('#gConfession').hidden=false;$('#finalBtn').disabled=true;$('#finalBtn').textContent=localized('gDelegated');
+ if(progress.gMeaning){$('#gMeaning').value=progress.gMeaning;$('#gResult').className='mission-feedback success show';$('#gResult').textContent=localized('gUserPrefix')+progress.gMeaning+localized('gUserSuffix');$('#shareG').disabled=false;}
+}
 if(progress.lastRoom && location.hash==='' && progress.lastRoom!=='recepcion'){
   // Recordamos la sala del carnet, no forzamos un salto en la cara al visitante.
   const room=$('#roomNow');if(room)room.textContent='Recepción (el carnet recuerda '+progress.lastRoom+')';
@@ -852,7 +859,7 @@ annEmailParts().forEach(part=>{
 annEmailBoard.addEventListener('click',e=>{const up=e.target.closest('[data-email-up]'),down=e.target.closest('[data-email-down]'),part=e.target.closest('.email-part');if(!part||(!up&&!down))return;e.stopPropagation();const list=annEmailParts(),i=list.indexOf(part),j=up?i-1:i+1;if(j<0||j>=list.length)return;const other=list[j];if(up)annEmailBoard.insertBefore(part,other);else annEmailBoard.insertBefore(other,part);part.classList.remove('selected');annSelectedEmail=null;});
 $('#emailCheck').addEventListener('click',()=>{
  const actual=annEmailParts().map(p=>p.dataset.emailPart).join(',');
- if(actual==='subject,greeting,facts,request,closing'){ $('#emailFeedback').className='mission-feedback success show';$('#emailFeedback').textContent=localized('m02Success');progress.missions=progress.missions||{};progress.missions.email=true;saveProgress();awardStamp('form');talk(localized('m02Success'),'MISIÓN 02 · COMPLETADA');}
+ if(actual==='subject,greeting,facts,request,closing'){ $('#emailFeedback').className='mission-feedback success show';$('#emailFeedback').textContent=localized('m02Success');progress.missions=progress.missions||{};progress.missions.email=true;saveProgress();talk(localized('m02Success'),'MISIÓN 02 · COMPLETADA');}
  else{$('#emailFeedback').className='mission-feedback hint show';$('#emailFeedback').textContent=localized('m02Fail');talk(localized('m02Fail'),'¿EN SERIO?');}
 });
 $('#emailHint').addEventListener('click',()=>{$('#emailFeedback').className='mission-feedback hint show';$('#emailFeedback').textContent=localized('m02Hint');awardStamp('hint');talk(localized('m02Hint'),'SUSURRO · PISTA');});
