@@ -407,7 +407,13 @@ function loadProgress(){
 let progress=loadProgress();
 function saveProgress(){try{localStorage.setItem(VISITOR_KEY,JSON.stringify(progress));}catch(e){/* Navegación privada: el juego sigue, aunque el archivo no recuerde. */}}
 function stampNames(){
- return {resize:'Letra en su sitio',hint:'La pista no solicitada',wall:'Arquitecto de paredes',form:'Monigote certificado',document:'Acceso a lo inaccesible',archivist:'Archivero/a del vacío',babel:'Políglota por accidente','g-hunter':'Cazador/a de G',regular:'Visitante frecuente',secret:'Curiosidad de sótano',faq:'Pregunta incómoda',reset:'Reinicio estratégico'};
+ const lang=currentLang==='babel'?'es':currentLang;
+ const all={
+ es:{resize:'Letra en su sitio',hint:'La pista no solicitada',wall:'Arquitecto de paredes',form:'Monigote certificado',document:'Acceso a lo inaccesible',archivist:'Archivero/a del vacío',babel:'Políglota por accidente','g-hunter':'Cazador/a de G',regular:'Visitante frecuente',secret:'Curiosidad de sótano',faq:'Pregunta incómoda',reset:'Reinicio estratégico'},
+ en:{resize:'Letters in place',hint:'The unsolicited hint',wall:'Wall architect',form:'Certified little monster',document:'Access to the inaccessible',archivist:'Archivist of emptiness',babel:'Accidental polyglot','g-hunter':'G hunter',regular:'Frequent visitor',secret:'Basement curiosity',faq:'Awkward question',reset:'Strategic restart'},
+ de:{resize:'Buchstaben am richtigen Platz',hint:'Der ungefragte Hinweis',wall:'Wandarchitekt',form:'Zertifiziertes Monsterchen',document:'Zugang zum Unzugänglichen',archivist:'Archivar des Nichts',babel:'Zufalls-Polyglott','g-hunter':'G-Jäger/in',regular:'Stammgast',secret:'Keller-Neugier',faq:'Unbequeme Frage',reset:'Strategischer Neustart'}
+ };
+ return all[lang]||all.es;
 }
 function renderPassport(){
  const earned=new Set(progress.stamps||[]);
@@ -418,11 +424,18 @@ function renderPassport(){
 function awardStamp(id){
  if(!id||!stampNames()[id]||(progress.stamps||[]).includes(id))return;
  progress.stamps.push(id);saveProgress();renderPassport();
- toast('SELLO OBTENIDO: '+stampNames()[id]+'. El documento no tiene valor legal, pero sí bastante tinta.');
+ toast(localized('stampToastPrefix')+stampNames()[id]+localized('stampToastSuffix'));
 }
 function enterSecret(reason){
- awardStamp('secret');talk('¿CÓMO HAS ENCONTRADO EL SÓTANO? ¡Este nivel no aparece en ningún plano! Bueno, ya que estás aquí: por favor no hagas un plano.','¡¿CÓMO?! · ACCESO NO CONTEMPLADO');
- $('#secretFeedback').textContent='Acceso concedido por error. Motivo: '+reason+'. Este permiso caduca en cuanto alguien lo lea.';
+ awardStamp('secret');
+ const base=currentLang==='babel'?'es':currentLang;
+ const reasonMap={
+ es:{'siete clics ceremoniales sobre el logotipo':L.es.secretReasonClick,'código de Konami':L.es.secretReasonKonami,'la frase que nadie ha escrito':L.es.secretReasonPhrase},
+ en:{'siete clics ceremoniales sobre el logotipo':L.en.secretReasonClick,'código de Konami':L.en.secretReasonKonami,'la frase que nadie ha escrito':L.en.secretReasonPhrase},
+ de:{'siete clics ceremoniales sobre el logotipo':L.de.secretReasonClick,'código de Konami':L.de.secretReasonKonami,'la frase que nadie ha escrito':L.de.secretReasonPhrase}
+ };
+ talk(localized('secretLine'),localized('surprisedLabel')+' · SECRET ACCESS');
+ $('#secretFeedback').textContent=localized('secretReason')+((reasonMap[base]&&reasonMap[base][reason])||reason)+localized('secretSuffix');
  $('#secretFeedback').classList.add('show');navigateRoom('sotano');
 }
 function loopBack(){
@@ -437,7 +450,7 @@ function loopBack(){
  if(loopCount>=7){
   $('#gConfession').hidden=false;$('#finalBtn').disabled=true;$('#finalBtn').textContent=localized('gDelegated');
   awardStamp('g-hunter');
-  talk(localized('gConfessionLine'),'…BUENO, YA QUE LO HICISTE…');
+  talk(localized('gConfessionLine'),localized('resignedLabel'));
   navigateRoom('sala-g');toast(localized('gTransferred'));return;
  }
  const label=loopCount>=4
@@ -720,6 +733,35 @@ Object.assign(STATIC_TEXT.en,{"El servicio ficticio entregó un cactus en vez de
 Object.assign(STATIC_TEXT.de,{"El servicio ficticio entregó un cactus en vez de una cafetera. Ordena las partes del mensaje y reclama con dignidad.":"Ein fiktiver Dienst lieferte einen Kaktus statt einer Kaffeemaschine. Ordnen Sie die E-Mail-Teile und beschweren Sie sich würdevoll.","Los hechos":"Die Fakten","Recibí un cactus, aunque pedí una cafetera.":"Ich erhielt einen Kaktus, obwohl ich eine Kaffeemaschine bestellt hatte.","El saludo":"Die Anrede","Estimado equipo de atención al cliente:":"Sehr geehrtes Kundenservice-Team:","El cierre":"Der Gruß","Saludos cordiales, una persona con un cactus.":"Mit freundlichen Grüßen, eine Person mit einem Kaktus.","El asunto":"Der Betreff","Pedido 482: producto recibido incorrecto":"Bestellung 482: falscher Artikel erhalten","La petición":"Die Bitte","Solicito el cambio por el producto que compré.":"Ich bitte um Austausch gegen den bestellten Artikel.","MISIÓN 02 · CORREO ORDENADO":"MISSION 02 · E-MAIL ORDNEN","MISIÓN 03 · MENSAJES SOSPECHOSOS":"MISSION 03 · VERDÄCHTIGE NACHRICHTEN","MISIÓN 04 · ORIENTACIÓN":"MISSION 04 · ORIENTIERUNG","MISIÓN 05 · CONTRASEÑAS":"MISSION 05 · PASSWÖRTER","MISIÓN 06 · PEDIR AYUDA":"MISSION 06 · UM HILFE BITTEN","El correo de reclamación":"Die Beschwerde-E-Mail","El mensaje sospechoso":"Die verdächtige Nachricht","Marca los mensajes que revisarías antes de actuar. No abras enlaces reales: esto es una simulación segura.":"Markieren Sie Nachrichten, die Sie vor einer Reaktion prüfen würden. Öffnen Sie keine echten Links; dies ist eine sichere Simulation.","«TU BANCO»":"„IHRE BANK“","Su cuenta será bloqueada en 10 minutos. Confirme su clave en este enlace.":"Ihr Konto wird in 10 Minuten gesperrt. Bestätigen Sie Ihr Passwort über diesen Link.","«PAQUETERÍA»":"„PAKETDIENST“","Su paquete está retenido. Pague ahora una tarifa desconocida para evitar su devolución.":"Ihr Paket wird zurückgehalten. Zahlen Sie jetzt eine unbekannte Gebühr, um die Rücksendung zu verhindern.","«RECORDATORIO DE CITA»":"„TERMINERINNERUNG“","Le recordamos su cita de mañana. Si necesita modificarla, llame al número habitual del centro.":"Wir erinnern Sie an Ihren morgigen Termin. Wenn Sie ihn ändern müssen, rufen Sie die übliche Nummer der Einrichtung an.","«ALGUIEN CONOCIDO»":"„EINE BEKANNTE PERSON“","Me llegó un código a tu teléfono. Pásamelo rápido, por favor.":"Ein Code ist auf deinem Telefon angekommen. Schick ihn mir bitte schnell.","Comprobar selección":"Auswahl prüfen","Enviar correo":"E-Mail senden","Pista":"Hinweis","Me perdí. ¿Y ahora?":"Ich habe mich verirrt. Und jetzt?","Descubre cómo volver a un lugar conocido y comprobar dónde estás, sin tener que fingir que lo tenías todo bajo control.":"Finden Sie heraus, wie Sie zu einem bekannten Ort zurückkehren und prüfen, wo Sie sich befinden, ohne vorzugeben, alles im Griff zu haben.","ESTÁS EN:":"SIE SIND IN:","Práctica 04":"Übung 04","¿Dónde estoy?":"Wo bin ich?","Volver a la sala anterior":"Zum vorherigen Raum","Volver al pasillo":"Zurück zum Flur","Una contraseña no es una pregunta secreta.":"Ein Passwort ist keine Sicherheitsfrage.","Elige cuatro palabras de ejemplo para crear una frase larga. No escribas aquí ninguna contraseña real ni reutilices esta combinación en tus cuentas.":"Wählen Sie vier Beispielwörter für eine lange Passphrase. Geben Sie hier kein echtes Passwort ein und verwenden Sie diese Kombination nicht für Ihre Konten.","Nube":"Wolke","Cactus":"Kaktus","Café":"Kaffee","Linterna":"Taschenlampe","Tren":"Zug","Luna":"Mond","Marea":"Gezeiten","Calcetín":"Socke","Tu frase de ejemplo aparecerá aquí.":"Ihre Beispielphrase erscheint hier.","Crear frase de ejemplo":"Beispielphrase erstellen","Vaciar":"Leeren","La ayuda también es una habilidad.":"Um Hilfe zu bitten, ist auch eine Fähigkeit.","La pantalla no tiene por qué enseñarte todo. A veces la mejor función es pedir a una persona que te muestre el proceso y luego te deje probar.":"Der Bildschirm muss Ihnen nicht alles beibringen. Manchmal ist es am besten, jemanden zu bitten, es vorzumachen und Sie dann selbst üben zu lassen.","ANN-UNG · TARJETA PARA APRENDER CON ALGUIEN":"ANN-UNG · LERNKARTE MIT EINER PERSON","¿Me ayudas a aprender?":"Hilfst du mir beim Lernen?","Estoy intentando aprender a usar una función digital. ¿Podrías mostrármela una vez y luego dejarme intentarlo yo? Prefiero practicar, equivocarme y volver a probar.":"Ich lerne gerade, eine digitale Funktion zu benutzen. Können Sie sie mir einmal zeigen und mich dann selbst versuchen lassen? Ich möchte üben, Fehler machen und es erneut probieren.","El progreso no necesita vergüenza. Solo un poco de paciencia.":"Fortschritt braucht keine Scham. Nur ein wenig Geduld.","Copiar petición de ayuda":"Hilfsanfrage kopieren","Imprimir tarjeta":"Karte drucken"});
 Object.assign(STATIC_TEXT.en,{"El servicio ficticio entregó un cactus en vez de una cafetera. Ordena las partes del mensaje y reclama con dignidad.":"A fictional service delivered a cactus instead of a coffee maker. Put the email parts in order and complain with dignity.","Los hechos":"The facts","Recibí un cactus, aunque pedí una cafetera.":"I received a cactus, although I ordered a coffee maker.","El saludo":"The greeting","Estimado equipo de atención al cliente:":"Dear customer service team:","El cierre":"The closing","Saludos cordiales, una persona con un cactus.":"Kind regards, a person with a cactus.","El asunto":"The subject","Pedido 482: producto recibido incorrecto":"Order 482: wrong product received","La petición":"The request","Solicito el cambio por el producto que compré.":"I request an exchange for the product I ordered.","MISIÓN 02 · CORREO ORDENADO":"MISSION 02 · ORDER THE EMAIL","MISIÓN 03 · MENSAJES SOSPECHOSOS":"MISSION 03 · SUSPICIOUS MESSAGES","MISIÓN 04 · ORIENTACIÓN":"MISSION 04 · FIND YOUR WAY","MISIÓN 05 · CONTRASEÑAS":"MISSION 05 · PASSPHRASES","MISIÓN 06 · PEDIR AYUDA":"MISSION 06 · ASK FOR HELP","Marca los mensajes que revisarías antes de actuar. No abras enlaces reales: esto es una simulación segura.":"Select the messages you would check before acting. Do not open real links; this is a safe simulation.","«TU BANCO»":"“YOUR BANK”","Su cuenta será bloqueada en 10 minutos. Confirme su clave en este enlace.":"Your account will be blocked in 10 minutes. Confirm your password using this link.","«PAQUETERÍA»":"“DELIVERY SERVICE”","Su paquete está retenido. Pague ahora una tarifa desconocida para evitar su devolución.":"Your parcel is being held. Pay an unknown fee now to avoid its return.","«RECORDATORIO DE CITA»":"“APPOINTMENT REMINDER”","Le recordamos su cita de mañana. Si necesita modificarla, llame al número habitual del centro.":"This is a reminder of your appointment tomorrow. If you need to change it, call the centre’s usual number.","«ALGUIEN CONOCIDO»":"“SOMEONE YOU KNOW”","Me llegó un código a tu teléfono. Pásamelo rápido, por favor.":"A code arrived on your phone. Send it to me quickly, please.","Comprobar selección":"Check selection","Enviar correo":"Send email","Pista":"Hint","Me perdí. ¿Y ahora?":"I am lost. Now what?","Descubre cómo volver a un lugar conocido y comprobar dónde estás, sin tener que fingir que lo tenías todo bajo control.":"Find out how to return to a familiar place and check where you are, without pretending you had everything under control.","ESTÁS EN:":"YOU ARE IN:","Práctica 04":"Practice 04","¿Dónde estoy?":"Where am I?","Volver a la sala anterior":"Return to the previous room","Volver al pasillo":"Back to the hallway","Una contraseña no es una pregunta secreta.":"A password is not a secret question.","Elige cuatro palabras de ejemplo para crear una frase larga. No escribas aquí ninguna contraseña real ni reutilices esta combinación en tus cuentas.":"Choose four sample words to create a long passphrase. Do not enter a real password here or reuse this combination for your accounts.","Nube":"Cloud","Café":"Coffee","Linterna":"Flashlight","Tren":"Train","Luna":"Moon","Marea":"Tide","Calcetín":"Sock","Tu frase de ejemplo aparecerá aquí.":"Your sample phrase will appear here.","Crear frase de ejemplo":"Create sample phrase","Vaciar":"Clear","La ayuda también es una habilidad.":"Asking for help is a skill, too.","La pantalla no tiene por qué enseñarte todo. A veces la mejor función es pedir a una persona que te muestre el proceso y luego te deje probar.":"The screen does not have to teach you everything. Sometimes the best feature is asking a person to show you, then letting you try.","ANN-UNG · TARJETA PARA APRENDER CON ALGUIEN":"ANN-UNG · LEARNING WITH SOMEONE CARD","¿Me ayudas a aprender?":"Can you help me learn?","Estoy intentando aprender a usar una función digital. ¿Podrías mostrármela una vez y luego dejarme intentarlo yo? Prefiero practicar, equivocarme y volver a probar.":"I am learning to use a digital feature. Could you show me once and then let me try it myself? I would like to practise, make mistakes, and try again.","El progreso no necesita vergüenza. Solo un poco de paciencia.":"Progress does not need shame. Just a little patience.","Copiar petición de ayuda":"Copy help request","Imprimir tarjeta":"Print card","NO LO ABRAS":"DO NOT OPEN IT"});
 Object.assign(STATIC_TEXT.de,{"El servicio ficticio entregó un cactus en vez de una cafetera. Ordena las partes del mensaje y reclama con dignidad.":"Ein fiktiver Dienst lieferte einen Kaktus statt einer Kaffeemaschine. Ordnen Sie die E-Mail-Teile und beschweren Sie sich würdevoll.","Los hechos":"Die Fakten","Recibí un cactus, aunque pedí una cafetera.":"Ich erhielt einen Kaktus, obwohl ich eine Kaffeemaschine bestellt hatte.","El saludo":"Die Anrede","Estimado equipo de atención al cliente:":"Sehr geehrtes Kundenservice-Team:","El cierre":"Der Gruß","Saludos cordiales, una persona con un cactus.":"Mit freundlichen Grüßen, eine Person mit einem Kaktus.","El asunto":"Der Betreff","Pedido 482: producto recibido incorrecto":"Bestellung 482: falscher Artikel erhalten","La petición":"Die Bitte","Solicito el cambio por el producto que compré.":"Ich bitte um Austausch gegen den bestellten Artikel.","MISIÓN 02 · CORREO ORDENADO":"MISSION 02 · E-MAIL ORDNEN","MISIÓN 03 · MENSAJES SOSPECHOSOS":"MISSION 03 · VERDÄCHTIGE NACHRICHTEN","MISIÓN 04 · ORIENTACIÓN":"MISSION 04 · ORIENTIERUNG","MISIÓN 05 · CONTRASEÑAS":"MISSION 05 · PASSWÖRTER","MISIÓN 06 · PEDIR AYUDA":"MISSION 06 · UM HILFE BITTEN","Marca los mensajes que revisarías antes de actuar. No abras enlaces reales: esto es una simulación segura.":"Markieren Sie Nachrichten, die Sie vor einer Reaktion prüfen würden. Öffnen Sie keine echten Links; dies ist eine sichere Simulation.","«TU BANCO»":"„IHRE BANK“","Su cuenta será bloqueada en 10 minutos. Confirme su clave en este enlace.":"Ihr Konto wird in 10 Minuten gesperrt. Bestätigen Sie Ihr Passwort über diesen Link.","«PAQUETERÍA»":"„PAKETDIENST“","Su paquete está retenido. Pague ahora una tarifa desconocida para evitar su devolución.":"Ihr Paket wird zurückgehalten. Zahlen Sie jetzt eine unbekannte Gebühr, um die Rücksendung zu verhindern.","«RECORDATORIO DE CITA»":"„TERMINERINNERUNG“","Le recordamos su cita de mañana. Si necesita modificarla, llame al número habitual del centro.":"Wir erinnern Sie an Ihren morgigen Termin. Wenn Sie ihn ändern müssen, rufen Sie die übliche Nummer der Einrichtung an.","«ALGUIEN CONOCIDO»":"„EINE BEKANNTE PERSON“","Me llegó un código a tu teléfono. Pásamelo rápido, por favor.":"Ein Code ist auf deinem Telefon angekommen. Schick ihn mir bitte schnell.","Comprobar selección":"Auswahl prüfen","Enviar correo":"E-Mail senden","Pista":"Hinweis","Me perdí. ¿Y ahora?":"Ich habe mich verirrt. Und jetzt?","Descubre cómo volver a un lugar conocido y comprobar dónde estás, sin tener que fingir que lo tenías todo bajo control.":"Finden Sie heraus, wie Sie zu einem bekannten Ort zurückkehren und prüfen, wo Sie sich befinden, ohne vorzugeben, alles im Griff zu haben.","ESTÁS EN:":"SIE SIND IN:","Práctica 04":"Übung 04","¿Dónde estoy?":"Wo bin ich?","Volver a la sala anterior":"Zum vorherigen Raum","Volver al pasillo":"Zurück zum Flur","Una contraseña no es una pregunta secreta.":"Ein Passwort ist keine Sicherheitsfrage.","Elige cuatro palabras de ejemplo para crear una frase larga. No escribas aquí ninguna contraseña real ni reutilices esta combinación en tus cuentas.":"Wählen Sie vier Beispielwörter für eine lange Passphrase. Geben Sie hier kein echtes Passwort ein und verwenden Sie diese Kombination nicht für Ihre Konten.","Nube":"Wolke","Café":"Kaffee","Linterna":"Taschenlampe","Tren":"Zug","Luna":"Mond","Marea":"Gezeiten","Calcetín":"Socke","Tu frase de ejemplo aparecerá aquí.":"Ihre Beispielphrase erscheint hier.","Crear frase de ejemplo":"Beispielphrase erstellen","Vaciar":"Leeren","La ayuda también es una habilidad.":"Um Hilfe zu bitten, ist auch eine Fähigkeit.","La pantalla no tiene por qué enseñarte todo. A veces la mejor función es pedir a una persona que te muestre el proceso y luego te deje probar.":"Der Bildschirm muss Ihnen nicht alles beibringen. Manchmal ist es am besten, jemanden zu bitten, es vorzumachen und Sie dann selbst üben zu lassen.","ANN-UNG · TARJETA PARA APRENDER CON ALGUIEN":"ANN-UNG · LERNKARTE MIT EINER PERSON","¿Me ayudas a aprender?":"Hilfst du mir beim Lernen?","Estoy intentando aprender a usar una función digital. ¿Podrías mostrármela una vez y luego dejarme intentarlo yo? Prefiero practicar, equivocarme y volver a probar.":"Ich lerne gerade, eine digitale Funktion zu benutzen. Können Sie sie mir einmal zeigen und mich dann selbst versuchen lassen? Ich möchte üben, Fehler machen und es erneut probieren.","El progreso no necesita vergüenza. Solo un poco de paciencia.":"Fortschritt braucht keine Scham. Nur ein wenig Geduld.","Copiar petición de ayuda":"Hilfsanfrage kopieren","Imprimir tarjeta":"Karte drucken","NO LO ABRAS":"NICHT ÖFFNEN"});
+
+Object.assign(L.es,{
+ stampToastPrefix:'SELLO OBTENIDO: ',stampToastSuffix:'. El documento no tiene valor legal, pero sí bastante tinta.',
+ wall1:'La puerta está en modo cuadro. Por favor, admire su funcionalidad.',wall2:'Esta puerta fue instalada por el Departamento de Perspectivas. Solo sirve para mirar.',wall3:'¿Ha probado abrirla desde el otro lado? Nosotros tampoco tenemos el otro lado.',wall4:'La puerta se encuentra temporalmente cerrada por ser una pared.',wall5:'Su solicitud se ha enviado al comité de bisagras. No se han detectado bisagras.',wall6:'La pared agradece su interés. La pared no hará declaraciones.',wall7:'¡SELLO OBTENIDO! Has abierto la puerta más resistente del edificio: la que no existe. Aquí tienes tu premio administrativo.',
+ wallLabel:'ARQUITECTURA · PARED FALSA',seriousLabel:'¿EN SERIO?',furiousLabel:'¡NO LO ABRAS!',surprisedLabel:'¡¿CÓMO?!',resignedLabel:'…BUENO, YA QUE LO HICISTE…',
+ captchaTalk:'¡Verificado! Has demostrado que no eres un robot. El equipo técnico está haciendo preguntas sobre mí.',captchaLabel:'RADIANTE · CAPTCHA',
+ queueStatus:'Número emitido correctamente. Si pierdes este número, tendrás que solicitar otro número para solicitar otro número.',queueTalk:'Tu turno es el {n}. No te llamaremos por el número. Queremos preservar la sorpresa.',
+ formTalk:'Tu formulario ha sido recibido, leído y desmarcado. Una operación impecable.',formLabel:'ARCHIVO Y CONTROL DE DAÑOS',
+ secretReasonClick:'siete clics ceremoniales sobre el logotipo',secretReasonKonami:'código de Konami',secretReasonPhrase:'la frase que nadie ha escrito'
+});
+Object.assign(L.en,{
+ stampToastPrefix:'STAMP EARNED: ',stampToastSuffix:'. This document has no legal value, but it does contain an unreasonable amount of ink.',
+ wall1:'The door is in picture mode. Please admire its functionality.',wall2:'This door was installed by the Department of Perspective. It is for looking only.',wall3:'Have you tried opening it from the other side? We do not have an other side either.',wall4:'The door is temporarily closed because it is a wall.',wall5:'Your request has been sent to the Hinge Committee. No hinges were detected.',wall6:'The wall appreciates your interest. The wall will make no statement.',wall7:'STAMP EARNED! You opened the most solid door in the building: the one that does not exist. Here is your administrative prize.',
+ wallLabel:'ARCHITECTURE · FAKE WALL',seriousLabel:'SERIOUSLY?',furiousLabel:'DO NOT OPEN IT!',surprisedLabel:'HOW?!',resignedLabel:'…WELL, SINCE YOU DID…',
+ captchaTalk:'Verified! You have demonstrated that you are not a robot. The technical team is asking questions about me.',captchaLabel:'RADIANT · CAPTCHA',
+ queueStatus:'Number issued correctly. If you lose it, you will need to request another number in order to request another number.',queueTalk:'Your turn is {n}. We will not call you by number. We wish to preserve the surprise.',
+ formTalk:'Your form has been received, read, and unchecked. An impeccable operation.',formLabel:'ARCHIVE AND DAMAGE CONTROL',
+ secretReasonClick:'seven ceremonial clicks on the logo',secretReasonKonami:'the Konami code',secretReasonPhrase:'the phrase nobody has written'
+});
+Object.assign(L.de,{
+ stampToastPrefix:'STEMPEL ERHALTEN: ',stampToastSuffix:'. Dieses Dokument hat keinen rechtlichen Wert, aber erstaunlich viel Tinte.',
+ wall1:'Die Tür ist im Bildmodus. Bitte bewundern Sie ihre Funktionalität.',wall2:'Diese Tür wurde von der Abteilung für Perspektiven installiert. Sie dient nur zum Anschauen.',wall3:'Haben Sie versucht, sie von der anderen Seite zu öffnen? Wir haben auch keine andere Seite.',wall4:'Die Tür ist vorübergehend geschlossen, weil sie eine Wand ist.',wall5:'Ihr Antrag wurde an den Scharnierausschuss gesendet. Es wurden keine Scharniere gefunden.',wall6:'Die Wand bedankt sich für Ihr Interesse. Die Wand gibt keine Erklärung ab.',wall7:'STEMPEL ERHALTEN! Sie haben die stabilste Tür des Gebäudes geöffnet: die, die nicht existiert. Hier ist Ihr Verwaltungspreis.',
+ wallLabel:'ARCHITEKTUR · FALSCHE WAND',seriousLabel:'IM ERNST?',furiousLabel:'NICHT ÖFFNEN!',surprisedLabel:'WIE BITTE?!',resignedLabel:'…NA GUT, WO DU ES SCHON GETAN HAST…',
+ captchaTalk:'Verifiziert! Sie haben bewiesen, dass Sie kein Roboter sind. Das Technikteam stellt Fragen über mich.',captchaLabel:'STRAHLEND · CAPTCHA',
+ queueStatus:'Nummer korrekt vergeben. Wenn Sie sie verlieren, müssen Sie eine Nummer beantragen, um eine weitere Nummer zu beantragen.',queueTalk:'Sie sind Nummer {n}. Wir rufen Sie nicht nach Nummer auf. Die Überraschung soll erhalten bleiben.',
+ formTalk:'Ihr Formular wurde entgegengenommen, gelesen und abgewählt. Ein tadelloser Vorgang.',formLabel:'ARCHIV UND SCHADENSKONTROLLE',
+ secretReasonClick:'sieben feierliche Klicks auf das Logo',secretReasonKonami:'der Konami-Code',secretReasonPhrase:'der Satz, den niemand geschrieben hat'
+});
+
 const applyLanguageBase = applyLanguage;
 function translateStaticText(language){
  const lang=language==='babel'?'es':language;
@@ -764,35 +806,27 @@ if(progress.lastRoom && location.hash==='' && progress.lastRoom!=='recepcion'){
 }
 $('#fakeDoor').addEventListener('click',()=>{
  progress.fakeDoorClicks=(progress.fakeDoorClicks||0)+1;saveProgress();
- const excuses=[
- 'La puerta está en modo cuadro. Por favor, admire su funcionalidad.',
- 'Esta puerta fue instalada por el Departamento de Perspectivas. Solo sirve para mirar.',
- '¿Ha probado abrirla desde el otro lado? Nosotros tampoco tenemos el otro lado.',
- 'La puerta se encuentra temporalmente cerrada por ser una pared.',
- 'Su solicitud se ha enviado al comité de bisagras. No se han detectado bisagras.',
- 'La pared agradece su interés. La pared no hará declaraciones.',
- '¡SELLO OBTENIDO! Ha abierto la puerta más resistente del edificio: la que no existe. Aquí tiene su premio administrativo.'
- ];
+ const excuses=Array.from({length:7},(_,i)=>localized('wall'+(i+1)));
  const index=Math.min(progress.fakeDoorClicks-1,excuses.length-1);
  $('#fakeDoorResult').textContent=excuses[index];
- if(progress.fakeDoorClicks>=7){awardStamp('wall');talk(excuses[index],'¡¿CÓMO?! · ARQUITECTURA');}
- else talk(excuses[index],progress.fakeDoorClicks%2?'¿EN SERIO?':'ARCHIVO DE PAREDES');
+ if(progress.fakeDoorClicks>=7){awardStamp('wall');talk(excuses[index],localized('surprisedLabel')+' · '+localized('wallLabel'));}
+ else talk(excuses[index],progress.fakeDoorClicks%2?localized('seriousLabel'):'ARCHIVO DE PAREDES');
 });
 $('#captchaBtn').addEventListener('click',()=>{
  $('#formFeedback').className='mission-feedback success show';
- $('#formFeedback').textContent='Identidad aceptada provisionalmente. Nuestro algoritmo ha detectado un 12 % de monigote y un 88 % de persona con paciencia.';
- awardStamp('form');talk('¡Verificado! Has demostrado que no eres un robot. El equipo técnico está haciendo preguntas sobre mí.','RADIANtE · CAPTCHA');
+ $('#formFeedback').textContent=localized('captchaSuccess');
+ awardStamp('form');talk(localized('captchaTalk'),localized('captchaLabel'));
 });
 $('#queueBtn').addEventListener('click',()=>{
  progress.formQueue=(progress.formQueue||0)+1;saveProgress();
- const n=progress.formQueue;const q=$('#queueFeedback');q.hidden=false;q.textContent='SU TURNO: '+(846+n*37)+'. Personas por delante: '+(n*12+4)+'. Tiempo de espera: «en breve», unidad de tiempo todavía en desarrollo.';
- $('#formFeedback').textContent='Número emitido correctamente. Si pierde este número, deberá solicitar un número para solicitar otro número.';
- talk('¡Su turno es el '+(846+n*37)+'! No le llamaremos por el número. Queremos preservar la sorpresa.','VENTANILLA 03 · ATENCIÓN PERSONALIZADA');
+ const n=progress.formQueue;const q=$('#queueFeedback');q.hidden=false;q.textContent=localized('queuePrefix')+(846+n*37)+localized('queueMiddle')+(n*12+4)+localized('queueEnd');
+ $('#formFeedback').textContent=localized('queueStatus');
+ talk(localized('queueTalk').replace('{n}',String(846+n*37)),'VENTANILLA 03 · ATENCIÓN PERSONALIZADA');
 });
 $('#fileFormBtn').addEventListener('click',()=>{
  $('#formFeedback').className='mission-feedback hint show';
- $('#formFeedback').textContent='Formulario recibido. Se ha desmarcado automáticamente para protegerlo de una aceptación prematura. La ventanilla queda abierta hasta nuevo aviso.';
- talk('Su formulario ha sido recibido, leído y desmarcado. Una operación impecable.','ARCHIVO Y CONTROL DE DAÑOS');
+ $('#formFeedback').textContent=localized('formSubmitted');
+ talk(localized('formTalk'),localized('formLabel'));
 });
 $$('[data-doc]').forEach(b=>b.addEventListener('click',()=>{
  const id=b.dataset.doc;
@@ -850,9 +884,9 @@ if($('#noOpenRepeat')){
  noOpenButton.addEventListener('click',()=>{
   noOpenAttempts++;const lang=currentLang==='babel'?'es':currentLang;
   noOpenButton.textContent=noOpenTexts[lang][Math.min(noOpenAttempts,3)];
-  if(noOpenAttempts===1){noOpenButton.style.transform='translateX(15px) scale(.88) rotate(2deg)';talk(localized('noOpen1'),'FURIOSO · NO LO ABRAS');}
-  else if(noOpenAttempts===2){noOpenButton.style.transform='translateX(-9px) scale(.68) rotate(-3deg)';talk(localized('noOpen2'),'¡NO LO ABRAS!');}
-  else{noOpenButton.style.transform='none';talk(localized('noOpen3'),'…BUENO, YA QUE LO HICISTE…');navigateRoom('pasillo');}
+  if(noOpenAttempts===1){noOpenButton.style.transform='translateX(15px) scale(.88) rotate(2deg)';talk(localized('noOpen1'),localized('furiousLabel'));}
+  else if(noOpenAttempts===2){noOpenButton.style.transform='translateX(-9px) scale(.68) rotate(-3deg)';talk(localized('noOpen2'),localized('furiousLabel'));}
+  else{noOpenButton.style.transform='none';talk(localized('noOpen3'),localized('resignedLabel'));navigateRoom('pasillo');}
  });
 }
 /* M02: arrange a fictional complaint email using drag, arrows, or taps. */
