@@ -570,8 +570,8 @@ function applyLanguage(lang){
  $$('[data-i18n-html]').forEach(el=>{const key=el.dataset.i18nHtml;const text=(L[base]&&L[base][key]);if(text!==undefined)el.innerHTML=text;});
  $('#langLabel').textContent=localized('langLabel');$('.lang-switch').setAttribute('aria-label',localized('langGroupTitle'));
  $('#gMeaning').setAttribute('placeholder',localized('gMeaningPlaceholder'));
- $('[data-email-up]').forEach(el=>el.setAttribute('aria-label',({es:'Mover arriba',en:'Move up',de:'Nach oben'}[base])));
- $('[data-email-down]').forEach(el=>el.setAttribute('aria-label',({es:'Mover abajo',en:'Move down',de:'Nach unten'}[base])));
+ $$('[data-email-up]').forEach(el=>el.setAttribute('aria-label',({es:'Mover arriba',en:'Move up',de:'Nach oben'}[base])));
+ $$('[data-email-down]').forEach(el=>el.setAttribute('aria-label',({es:'Mover abajo',en:'Move down',de:'Nach unten'}[base])));
  const labelsA={es:['Aumentar el tamaño del texto','Reducir el tamaño del texto','Restablecer el tamaño de lectura'],en:['Increase text size','Decrease text size','Reset reading size'],de:['Text vergrößern','Text verkleinern','Leseschrift zurücksetzen']}[base];
  $('#fontUp').setAttribute('aria-label',labelsA[0]);$('#fontUp').title=labelsA[0];
  $('#fontDown').setAttribute('aria-label',labelsA[1]);$('#fontDown').title=labelsA[1];
