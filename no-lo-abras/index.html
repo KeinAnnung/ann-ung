@@ -70,6 +70,7 @@ section[id]{scroll-margin-top:148px}
 
 .mission-card.completed,.mission-box.completed{border-color:var(--cyan)!important;box-shadow:inset 0 0 22px #72f3df0a}.mission-card.completed:after{content:"✓ COMPLETADA";display:block;margin-top:12px;color:var(--cyan);font:9px var(--mono);letter-spacing:.08em}.mission-box.completed{border-style:solid}
 </style></head>
+<script src="./anfitrion.js" defer></script>  
 <body>
 <div class="top-alert"><b>AVISO LEGAL:</b> esta visita es voluntaria. Para retirarse, complete el formulario de salida voluntaria.</div>
 <header><div class="wrap head"><a class="logo" href="#inicio">ANN<b>—</b>UNG™<small>OFICINA DE EXPLICACIONES PENDIENTES</small></a><nav class="nav" aria-label="Navegación principal"><a href="#nosotros" data-i18n="navAbout">NOSOTROS</a><a href="#equipo" data-i18n="navTeam">EQUIPO</a><a href="#proposito" data-i18n="navMission">MISIÓN</a><a href="#archivo" data-i18n="navArchive">ARCHIVO</a><a href="#aprender" data-i18n="navLearn">APRENDER</a><a href="#preguntas" data-i18n="navFAQ">FAQ</a><a class="g-link" href="#g" data-i18n="navG">¿LA G?</a></nav></div></header>
@@ -353,7 +354,7 @@ $('#leaveBtn').addEventListener('click',()=>showModal(localized('exitTitle'),loc
 $$('[data-say-id]').forEach(b=>b.addEventListener('click',()=>talk(dialogue(b.dataset.sayId),'ACLARACIÓN DEL PORTAVOZ')));
 $$('[data-loop]').forEach(b=>b.addEventListener('click',loopBack));
 $$('[data-doc]').forEach(b=>b.addEventListener('click',()=>{const box=$('#'+b.dataset.doc);box.classList.toggle('show');b.textContent=box.classList.contains('show')?'Volver a censurar':'Volver a revisar';talk(box.classList.contains('show')?'Se desclasificó la existencia del contenido, no el contenido. La organización agradece que no intente comprenderlo.':'Documento recensurado. Transparencia restaurada a niveles seguros.','ARCHIVO Y CONTROL DE DAÑOS');}));
-$('[data-modal]').forEach(b=>b.addEventListener('click',()=>b.dataset.modal==='transparencia'
+$$('[data-modal]').forEach(b=>b.addEventListener('click',()=>b.dataset.modal==='transparencia'
  ?showModal(localized('transparencyKicker'),localized('transparencyTitle'),localized('transparencyBody'),localized('transparencyStamp'))
  :showModal(localized('orgKicker'),localized('orgTitle'),localized('orgBody'),localized('orgStamp'))));
 $('#modalOk').addEventListener('click',()=>{closeModal();talk('Gracias por su comprensión. Que usted haya comprendido no es requisito para que agradezcamos su comprensión.','COMUNICADO DE CIERRE');});
